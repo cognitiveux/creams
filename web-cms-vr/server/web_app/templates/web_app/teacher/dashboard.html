@@ -1,0 +1,566 @@
+{% extends 'web_app/teacher_base.html' %}
+
+{% load staticfiles %}
+
+{% block scripts %}
+{{ block.super }}
+    <script defer src="{% static "/web_app/js/customJS/teacher_dashboard.js" %}"></script>
+{% endblock %}
+
+
+
+{% block toolbar %}
+<a href="/web_app/teacher/exhibition/" class="menu-item  me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Initiate an
+        Exhibition
+    </span>
+    <!--end:Menu link-->
+</a>
+
+<a href="/web_app/teacher/assessment/" class="menu-item  me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Assessment
+    </span>
+    <!--end:Menu link-->
+
+</a>
+
+{% endblock %}
+
+{% block content %}
+<!---->
+<!-- begin:: views-->
+<div class="toolbar py-5 py-lg-5" id="kt_toolbar">
+    <!--begin::Container-->
+    <div id="kt_toolbar_container" class="container-xxl py-5">
+        <!--begin::Row-->
+        <!-- These six boxes have an a element that belong to the same class "assessBlocks" 
+                            this class is defined in the css file {% static "/web_app/css/metronic/custom.css" %} and as of now the 
+                            only change is the height of the box-->
+        <div class="row gy-0 gx-14">
+            <div id="temporary" class="col-md-4 col-xl-2">
+                <!--begin::Card-->
+                <a href="../../demo11/dist/apps/projects/project.html"
+                    class="card border-hover-primary assessBlocks lady-lips">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 pt-9">
+                        <!--begin::Card Title-->
+                        <div class="card-title m-0">
+                            <h3 class="letters">Temporary Stored</h3>
+                        </div>
+                        <!--end::Card Title-->
+                    </div>
+                    <!--end:: Card header-->
+                    <hr>
+                    <!--begin:: Card body-->
+                    <div class="card-body p-9">
+                        <!--begin::Name-->
+                        <!--<div class="fs-3 fw-bold text-dark">Fitnes App</div>-->
+                        <!--end::Name-->
+                        <!--begin::Description-->
+                        <p class="letters text-black-400 fw-semibold fs-5 mt-1 mb-7">Display the
+                            exhibitions that
+                            are temporary stored by the students.</p>
+                        <!--end::Description-->
+
+                    </div>
+                    <!--end:: Card body-->
+                </a>
+                <!--end::Card-->
+            </div>
+            <div id="accepting" class="col-md-4 col-xl-2">
+                <!--begin::Card-->
+                <a href="../../demo11/dist/apps/projects/project.html"
+                    class="card border-hover-primary assessBlocks night-fade">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 pt-9">
+                        <!--begin::Card Title-->
+                        <div class="card-title m-0">
+                            <h3 class="letters">Accepting Artworks</h3>
+                        </div>
+                        <!--end::Card Title-->
+                    </div>
+                    <!--end:: Card header-->
+                    <hr>
+                    <!--begin:: Card body-->
+                    <div class="card-body p-9">
+                        <!--begin::Name-->
+                        <!--<div class="fs-3 fw-bold text-dark">Fitnes App</div>-->
+                        <!--end::Name-->
+                        <!--begin::Description-->
+                        <p class="letters text-black-400 fw-semibold fs-5 mt-1 mb-7">These exhibitions
+                            are
+                            finalized and are ready to be assessed.</p>
+                        <!--end::Description-->
+
+                    </div>
+                    <!--end:: Card body-->
+                </a>
+                <!--end::Card-->
+            </div>
+            <div id="readytobe" class="col-md-4 col-xl-2">
+                <!--begin::Card-->
+                <a href="../../demo11/dist/apps/projects/project.html"
+                    class="card border-hover-primary assessBlocks juicy-peach">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 pt-9">
+                        <!--begin::Card Title-->
+                        <div class="card-title m-0">
+                            <h3 class="letters">Ready to be Assessed</h3>
+                        </div>
+                        <!--end::Card Title-->
+                    </div>
+                    <!--end:: Card header-->
+                    <hr>
+                    <!--begin:: Card body-->
+                    <div class="card-body p-9">
+                        <!--begin::Name-->
+                        <!--<div class="fs-3 fw-bold text-dark">Fitnes App</div>-->
+                        <!--end::Name-->
+                        <!--begin::Description-->
+                        <p class="letters text-black-400 fw-semibold fs-5 mt-1 mb-7">These exhibitions
+                            are
+                            finalized and are ready to be assessed.</p>
+                        <!--end::Description-->
+
+                    </div>
+                    <!--end:: Card body-->
+                </a>
+                <!--end::Card-->
+            </div>
+            <div id="assessments" class="col-md-4 col-xl-2">
+                <!--begin::Card-->
+                <a href="../../demo11/dist/apps/projects/project.html"
+                    class="card border-hover-primary assessBlocks frozen-dreams">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 pt-9">
+                        <!--begin::Card Title-->
+                        <div class="card-title m-0">
+                            <h3 class="letters">Assessment Started</h3>
+                        </div>
+                        <!--end::Card Title-->
+                    </div>
+                    <!--end:: Card header-->
+                    <hr>
+                    <!--begin:: Card body-->
+                    <div class="card-body p-9">
+                        <!--begin::Name-->
+                        <!--<div class="fs-3 fw-bold text-dark">Fitnes App</div>-->
+                        <!--end::Name-->
+                        <!--begin::Description-->
+                        <p class="letters text-black-400 fw-semibold fs-5 mt-1 mb-7">Show exhibitions
+                            that are
+                            not completely assessed yet.</p>
+                        <!--end::Description-->
+
+                    </div>
+                    <!--end:: Card body-->
+                </a>
+                <!--end::Card-->
+            </div>
+            <div id="assessed" class="col-md-4 col-xl-2">
+                <!--begin::Card-->
+                <a href="../../demo11/dist/apps/projects/project.html"
+                    class="card border-hover-primary assessBlocks winter-neva">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 pt-9">
+                        <!--begin::Card Title-->
+                        <div class="card-title m-0">
+                            <h3 class="letters">Assessed
+                            </h3>
+                        </div>
+                        <!--end::Card Title-->
+                    </div>
+                    <!--end:: Card header-->
+                    <hr>
+                    <!--begin:: Card body-->
+                    <div class="card-body p-9">
+                        <!--begin::Name-->
+                        <!--<div class="fs-3 fw-bold text-dark">Fitnes App</div>-->
+                        <!--end::Name-->
+                        <!--begin::Description-->
+                        <p class="letters text-black-400 fw-semibold fs-5 mt-1 mb-7">Show assessed
+                            exhibitions
+                            you can publish.</p>
+                        <!--end::Description-->
+
+                    </div>
+                    <!--end:: Card body-->
+                </a>
+                <!--end::Card-->
+            </div>
+            <div id="published" class="col-md-4 col-xl-2">
+                <!--begin::Card-->
+                <a href="../../demo11/dist/apps/projects/project.html"
+                    class="card border-hover-primary assessBlocks february-ink">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 pt-9">
+                        <!--begin::Card Title-->
+                        <div class=" card-title m-0">
+                            <h3 class="letters">Published</h3>
+                        </div>
+                        <!--end::Card Title-->
+                    </div>
+                    <!--end:: Card header-->
+                    <hr>
+                    <!--begin:: Card body-->
+                    <div class="card-body p-9">
+                        <!--begin::Name-->
+                        <!--<div class="fs-3 fw-bold text-dark">Fitnes App</div>-->
+                        <!--end::Name-->
+                        <!--begin::Description-->
+                        <p class="letters text-black-400 fw-semibold fs-5 mt-1 mb-7">Show all published
+                            exhibitions. You can unpublish them.</p>
+                        <!--end::Description-->
+
+                    </div>
+                    <!--end:: Card body-->
+                </a>
+                <!--end::Card-->
+            </div>
+        </div>
+        <!--end::Row-->
+    </div>
+    <!--end::Container-->
+</div>
+<!-- end:: views-->
+
+<!-- begin:: carouselViews-->
+<div class="row g-10">
+    <!--begin::Team-->
+    <div class="mb-18">
+        <!--begin::Heading-->
+        <div class="text-center mb-12">
+            <!--begin::Title-->
+            <h3 class="fs-2hx text-dark mb-5">Current Unpublished Exhibitions by students</h3>
+            <!--end::Title-->
+            <!--begin::Sub-title-->
+            <div class="fs-5 text-muted fw-semibold">Click on an exhibition to view the artworks in a 3D
+                environment.</div>
+            <!--end::Sub-title=-->
+        </div>
+        <!--end::Heading-->
+        <!--begin::Slider-->
+        <div class="tns tns-default mb-10">
+            <!--begin::Wrapper-->
+            <div data-tns="true" data-tns-loop="true" data-tns-swipe-angle="false" data-tns-speed="2000"
+                data-tns-autoplay="true" data-tns-autoplay-timeout="18000" data-tns-controls="true" data-tns-nav="false"
+                data-tns-items="1" data-tns-center="false" data-tns-dots="false"
+                data-tns-prev-button="#kt_team_slider_prev" data-tns-next-button="#kt_team_slider_next"
+                data-tns-responsive="{1200: {items: 3}, 992: {items: 2}}">
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh4.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1" id="testpic"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh3.jfif" %}"
+                            ></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the future</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh1.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+            </div>
+            <!--end::Wrapper-->
+            <!--begin::Button-->
+            <button class="btn btn-icon btn-active-color-primary" id="kt_team_slider_prev">
+                <!--begin::Svg Icon | path: icons/duotune/arrows/arr074.svg-->
+                <span class="svg-icon svg-icon-3x">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M11.2657 11.4343L15.45 7.25C15.8642 6.83579 15.8642 6.16421 15.45 5.75C15.0358 5.33579 14.3642 5.33579 13.95 5.75L8.40712 11.2929C8.01659 11.6834 8.01659 12.3166 8.40712 12.7071L13.95 18.25C14.3642 18.6642 15.0358 18.6642 15.45 18.25C15.8642 17.8358 15.8642 17.1642 15.45 16.75L11.2657 12.5657C10.9533 12.2533 10.9533 11.7467 11.2657 11.4343Z"
+                            fill="currentColor" />
+                    </svg>
+                </span>
+                <!--end::Svg Icon-->
+            </button>
+            <!--end::Button-->
+            <!--begin::Button-->
+            <button class="btn btn-icon btn-active-color-primary" id="kt_team_slider_next">
+                <!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
+                <span class="svg-icon svg-icon-3x">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z"
+                            fill="currentColor" />
+                    </svg>
+                </span>
+                <!--end::Svg Icon-->
+            </button>
+            <!--end::Button-->
+        </div>
+        <!--end::Slider-->
+    </div>
+    <!--end::Team-->
+
+    <!--end::Body-->
+    <!--end::Card-->
+</div>
+<!-- end:: carouselViews-->
+<div class="toolbar py-5 py-lg-5" id="kt_toolbar">&nbsp;</div>
+<!-- begin:: carouselViews2-->
+<div class="row g-10">
+    <!--begin::Team-->
+    <div class="mb-18">
+        <!--begin::Heading-->
+        <div class="text-center mb-12">
+            <!--begin::Title-->
+            <h3 class="fs-2hx text-dark mb-5">Current Published Exhibitions by students</h3>
+            <!--end::Title-->
+            <!--begin::Sub-title-->
+            <div class="fs-5 text-muted fw-semibold">Click on an exhibition to view the artworks in a 3D
+                environment.</div>
+            <!--end::Sub-title=-->
+        </div>
+        <!--end::Heading-->
+        <!--begin::Slider-->
+        <div class="tns tns-default mb-10">
+            <!--begin::Wrapper-->
+            <div data-tns="true" data-tns-loop="true" data-tns-swipe-angle="false" data-tns-speed="2000"
+                data-tns-autoplay="true" data-tns-autoplay-timeout="18000" data-tns-controls="true" data-tns-nav="false"
+                data-tns-items="1" data-tns-center="false" data-tns-dots="false"
+                data-tns-prev-button="#kt_team_slider_prev2" data-tns-next-button="#kt_team_slider_next2"
+                data-tns-responsive="{1200: {items: 3}, 992: {items: 2}}">
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh4.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh3.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh1.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+
+                </div>
+                <!--end::Item-->
+                <!--begin::Item-->
+                <div class="col text-center mb-9">
+                    <!--begin::Photo-->
+                    <a href="https://www.google.com/">
+                        <img alt="exh1"
+                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                            src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
+                    <!--end::Photo-->
+                    <!--begin::Person-->
+                    <div class="mb-0">
+                        <!--begin::Position-->
+                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                        <div class="text fs-6 fw-bold">Temporary Stored</div>
+                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                        <!--begin::Position-->
+                    </div>
+                    <!--end::Person-->
+                </div>
+                <!--end::Item-->
+            </div>
+            <!--end::Wrapper-->
+            <!--begin::Button-->
+            <button class="btn btn-icon btn-active-color-primary" id="kt_team_slider_prev2">
+                <!--begin::Svg Icon | path: icons/duotune/arrows/arr074.svg-->
+                <span class="svg-icon svg-icon-3x">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M11.2657 11.4343L15.45 7.25C15.8642 6.83579 15.8642 6.16421 15.45 5.75C15.0358 5.33579 14.3642 5.33579 13.95 5.75L8.40712 11.2929C8.01659 11.6834 8.01659 12.3166 8.40712 12.7071L13.95 18.25C14.3642 18.6642 15.0358 18.6642 15.45 18.25C15.8642 17.8358 15.8642 17.1642 15.45 16.75L11.2657 12.5657C10.9533 12.2533 10.9533 11.7467 11.2657 11.4343Z"
+                            fill="currentColor" />
+                    </svg>
+                </span>
+                <!--end::Svg Icon-->
+            </button>
+            <!--end::Button-->
+            <!--begin::Button-->
+            <button class="btn btn-icon btn-active-color-primary" id="kt_team_slider_next2">
+                <!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
+                <span class="svg-icon svg-icon-3x">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12.6343 12.5657L8.45001 16.75C8.0358 17.1642 8.0358 17.8358 8.45001 18.25C8.86423 18.6642 9.5358 18.6642 9.95001 18.25L15.4929 12.7071C15.8834 12.3166 15.8834 11.6834 15.4929 11.2929L9.95001 5.75C9.5358 5.33579 8.86423 5.33579 8.45001 5.75C8.0358 6.16421 8.0358 6.83579 8.45001 7.25L12.6343 11.4343C12.9467 11.7467 12.9467 12.2533 12.6343 12.5657Z"
+                            fill="currentColor" />
+                    </svg>
+                </span>
+                <!--end::Svg Icon-->
+            </button>
+            <!--end::Button-->
+        </div>
+        <!--end::Slider-->
+    </div>
+    <!--end::Team-->
+
+    <!--end::Body-->
+    <!--end::Card-->
+</div>
+<!-- end:: carouselViews2-->
+<div class="toolbar py-5 py-lg-5" id="kt_toolbar">&nbsp;</div>
+{% endblock %}

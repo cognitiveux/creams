@@ -1,0 +1,149 @@
+{% extends 'web_app/teacher_base.html' %}
+
+{% load staticfiles %}
+
+{% block scripts %}
+	<script  src="{% static "/web_app/js/customJS/student_and_coadvisors_selection.js" %}"></script>
+	{{ block.super }}
+	<script>
+		const exh_id ='{{exh_id}}'
+	</script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid col-lg-9 col-11 col-xl-9 card-body p-lg-2">
+	<div class="mb-2">
+		<div class="row">
+			<div class="col-sm">
+				<!--begin::Title-->
+				<h3 class="fs-2hx text-dark mb-5">Student Exhibition Selection</h3>
+				<!--end::Title-->
+			</div>
+			<div class=" col-sm">
+				<!--begin::help--><a href="#"
+					class="btn btn-success btn-success-custom fw-semibold px-8 py-3 teal ">Help</a>
+				<!--end::help-->
+				<!--begin::cancel--><a href="#"
+					class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">Back to Main Exhibition Fields</a>
+				<!--end::cancel-->
+				<!--begin::Submit-->
+				<button type="submit" onclick='submit()'
+					class="btn btn-success btn-success-custom fw-semibold px-10 py-3" id="kt_modal_new_target_submit">
+					<!--begin::Indicator label-->
+					<span class="indicator-label" >Finish</span>
+					<!--end::Indicator label-->
+					<!--begin::Indicator progress-->
+					<span class="indicator-progress">Please wait... <span
+							class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+					<!--end::Indicator progress-->
+				</button>
+				<!--end::Submit-->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row g-10">
+
+	<!--begin:: Students-->
+	<div class="col-7 card  mh-400px scroll-y me-n7 pe-7">
+		<!--begin::Card header-->
+		<div class="card-header border-0 pt-6">
+			<!--begin::Card title-->
+			<div class="card-title">
+				Student Selection
+			</div>
+			<!--begin::Card title-->
+			<!--begin::Card toolbar-->
+			<div class="card-toolbar">
+
+			</div>
+			<!--end::Card toolbar-->
+		</div>
+		<!--end::Card header-->
+		<!--begin::Card body-->
+		<div class="card-body pt-0 scroll-y">
+			<!--begin::Table-->
+			<table class="table align-middle table-row-dashed fs-6 gy-5 " id="kt_customers_table">
+				<!--begin::Table head-->
+				<thead>
+					<!--begin::Table row-->
+					<tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+						<th class="min-w-125px">Name</th>
+						<th class="min-w-125px">Email</th>
+						<th class="min-w-125px">Class</th>
+						<th class="w-10px pe-2">
+							<div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+								<input class="form-check-input" type="checkbox" data-kt-check="true"
+									data-kt-check-target="#kt_customers_table .form-check-input" value="1" />
+							</div>
+						</th>
+					</tr>
+					<!--end::Table row-->
+				</thead>
+				<!--end::Table head-->
+				<!--begin::Table body-->
+				<tbody class="fw-semibold text-gray-600 scroll-y" id="student_table">
+					<!-- INSERT DATA VIA JS-->
+				</tbody>
+				<!--end::Table body-->
+			</table>
+			<!--end::Table-->
+		</div>
+		<!--end::Card body-->
+	</div>
+	<!--end::Students -->
+
+	<!--begin:: Coadvisors-->
+	<div class="col-5 card  mh-400px scroll-y me-n7 pe-7">
+		<!--begin::Card header-->
+		<div class="card-header border-0 pt-6">
+			<!--begin::Card title-->
+			<div class="card-title">
+				Coadvisors Selection
+			</div>
+			<!--begin::Card title-->
+			<!--begin::Card toolbar-->
+			<div class="card-toolbar">
+
+			</div>
+			<!--end::Card toolbar-->
+		</div>
+		<!--end::Card header-->
+		<!--begin::Card body-->
+		<div class="card-body pt-0 scroll-y">
+			<!--begin::Table-->
+			<table class="table align-middle table-row-dashed fs-6 gy-5 scroll-y" id="kt_coadvisors_table">
+				<!--begin::Table head-->
+				<thead>
+					<!--begin::Table row-->
+					<tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
+						<th class="min-w-125px">Name</th>
+						<th class="min-w-125px">ASsignments</th>
+						<th class="min-w-125px">Rank</th>
+						<th class="w-10px pe-2">
+							<div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+								<input class="form-check-input" type="checkbox" data-kt-check="true"
+									data-kt-check-target="#kt_coadvisors_table .form-check-input" value="1" />
+							</div>
+						</th>
+					</tr>
+					<!--end::Table row-->
+				</thead>
+				<!--end::Table head-->
+				<!--begin::Table body-->
+				<tbody class="fw-semibold text-gray-600 scroll-y" id="instructor_table">
+
+
+
+				</tbody>
+				<!--end::Table body-->
+			</table>
+			<!--end::Table-->
+		</div>
+		<!--end::Card body-->
+	</div>
+	<!--end:: Coadvisors-->
+</div>
+<div class="py-5 py-lg-5" id="kt_toolbar">&nbsp;</div>
+{% endblock %}

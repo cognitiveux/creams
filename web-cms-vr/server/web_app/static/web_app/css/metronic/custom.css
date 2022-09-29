@@ -1,0 +1,154 @@
+.assessBlocks {
+    height: 300px;
+}
+
+#footer-logo {
+    height: 60%;
+    width: 100%;
+}
+
+.carou-pics {
+    height: 200px;
+    width: 350px;
+}
+
+.lady-lips {
+    background: linear-gradient(#FF9CA0, #FFCFEF);
+}
+
+.night-fade {
+    background: linear-gradient(#A38ED2, #F9C1EB);
+}
+
+.juicy-peach {
+    background: linear-gradient(#FFECD2, #FDB8A1);
+}
+
+.frozen-dreams {
+    background: linear-gradient(#FDCCF1, #F8EDFB);
+}
+
+.winter-neva {
+    background: linear-gradient(#A2C5FE, #C2E9FC);
+}
+
+.milkyway {
+    background: linear-gradient(#D0DAE0, #E2EBF0);
+}
+
+.february-ink {
+    background: linear-gradient(#ADCCEF, #E7F0FD);
+}
+
+.vega {
+    background: linear-gradient(#EF9DA8, #FFDCE0);
+}
+
+.letters {
+    color: #000000;
+    text-align: center;
+    height: 42.09px;
+    width: 133.52px;
+}
+
+.foot-item {
+    height: 100%;
+}
+
+.sub {
+    width: 350px;
+}
+
+.foot-title {
+    font-size: 16px;
+    text-align: center !important;
+}
+
+.teal {
+    background-color: #20c997 !important;
+}
+
+.gray {
+    background-color: var(--bs-gray) !important;
+}
+
+.btn-check:checked+.btn.btn-success,
+.btn-check:active+.btn.btn-success,
+.btn.btn-success:focus:not(.btn-active),
+.btn.btn-success:hover:not(.btn-active),
+.btn.btn-success:active:not(.btn-active),
+.btn.btn-success.active,
+.btn.btn-success.show,
+.show>.btn.btn-success {
+    color: var(--kt-success-inverse);
+    border-color: var(--bs-teal);
+    background-color: var(--bs-gray-400) !important;
+}
+
+.right {
+    float: right;
+}
+
+.adjust_size {
+    height: 400px !important;
+    width: 400px !important;
+    background-size: contain !important;
+    background-position-x: center !important;
+    background-position-y: center !important;
+}
+
+
+.select2-results__option--highlighted {
+    background-color: #A2C5FE !important;
+}
+
+#myEmbeddedScene {
+    width: 100%;
+    height: 500px;
+
+}
+
+#control_panel {
+    height: 500px !important;
+}
+
+#artwork_selection {
+    height: 440px !important;
+}
+
+.unvisible {
+    visibility: hidden;
+}
+
+.edit_pad {
+    height: 700px !important;
+
+}
+
+.pink {
+    background-color: #f44c87 !important;
+}
+
+.thumbnail {
+    height: 15em !important;
+    width: 14em !important;
+}
+
+.long_thumbnail {
+    height: 15em !important;
+    width: 18em !important;
+}
+
+.super_long_thumbnail {
+    height: 15em !important;
+    width: 40em !important;
+}
+
+.googleplay {
+    width: 170px;
+    height: 60px;
+}
+
+.locked {
+    border-color: var(--kt-primary) !important;
+}

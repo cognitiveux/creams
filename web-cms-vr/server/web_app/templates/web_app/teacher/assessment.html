@@ -1,0 +1,177 @@
+{% extends 'web_app/teacher_base.html' %}
+
+{% load staticfiles %}
+
+{% block scripts %}
+{{ block.super }}
+{% endblock %}
+
+
+
+{% block toolbar %}
+<a href="/web_app/teacher/exhibition/" class="menu-item  me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Initiate an
+        Exhibition
+    </span>
+    <!--end:Menu link-->
+</a>
+
+<a href="/web_app/teacher/assessment/" class="menu-item here me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Assessment
+    </span>
+    <!--end:Menu link-->
+
+</a>
+
+{% endblock %}
+
+{% block content %}
+<!-- begin:: carouselViews-->
+<div class="card-body p-lg-17">
+    <div class="mb-18">
+        <div class="row">
+            <div class="col-sm">
+                <!--begin::Title-->
+                <h3 class="fs-2hx text-dark mb-5">Exhibition Assignments</h3>
+                <!--end::Title-->
+                <!--begin::Sub-title-->
+                <div class="fs-5 text-muted fw-semibold">Click on an initiated exhibition to view
+                    the
+                    corresponding students' exhibition rooms.</div>
+                <!--end::Sub-title-->
+
+
+            </div>
+            <div class="col-sm">
+                <!--begin::help-->
+                <a href="#" class="btn btn-success btn-success-custom fw-semibold px-8 py-5 teal right">Help</a>
+                <!--end::help-->
+            </div>
+            <div class="col-sm">
+
+                <!--begin::search-->
+                <div class="d-flex my-2">
+                    <!--begin::Search-->
+                    <div class="d-flex align-items-center position-relative me-4">
+                        <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
+                        <span class="svg-icon svg-icon-3 position-absolute ms-3">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
+                                    transform="rotate(45 17.0365 15.1223)" fill="currentColor">
+                                </rect>
+                                <path
+                                    d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                    fill="currentColor"></path>
+                            </svg>
+                        </span>
+                        <!--end::Svg Icon-->
+                        <input type="text" id="kt_filter_search"
+                            class="form-control form-control-sm form-control-solid w-400px ps-10" placeholder="Search">
+                    </div>
+                    <!--end::Search-->
+                </div>
+                <!--end::search-->
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <!--begin::Wrapper-->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 gy-10">
+            <!--begin::Item-->
+            <div class="col text-center mb-9">
+                <!--begin::Photo-->
+                <a href="/web_app/teacher/student_assessment/">
+                    <img alt="exh1"
+                        class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                        src="{% static "web_app/media/exh/exh4.jfif" %}"></a>
+                <!--end::Photo-->
+                <!--begin::Person-->
+                <div class="mb-0">
+                    <!--begin::Position-->
+                    <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                    <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                    <div class="text fs-6 fw-bold">Temporary Stored</div>
+                    <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                    <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                    <!--begin::Position-->
+                </div>
+                <!--end::Person-->
+            </div>
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="col text-center mb-9">
+                <!--begin::Photo-->
+                <a href="https://www.google.com/">
+                    <img alt="exh1"
+                        class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                        src="{% static "/web_app/media/exh/exh3.jfif" %}"></a>
+                <!--end::Photo-->
+                <!--begin::Person-->
+                <div class="mb-0">
+                    <!--begin::Position-->
+                    <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                    <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                    <div class="text fs-6 fw-bold">Temporary Stored</div>
+                    <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                    <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                    <!--begin::Position-->
+                </div>
+                <!--end::Person-->
+            </div>
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="col text-center mb-9">
+                <!--begin::Photo-->
+                <a href="https://www.google.com/">
+                    <img alt="exh1"
+                        class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                        src="{%static "/web_app/media/exh/exh2.jfif" %}"></a>
+                <!--end::Photo-->
+                <!--begin::Person-->
+                <div class="mb-0">
+                    <!--begin::Position-->
+                    <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                    <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                    <div class="text fs-6 fw-bold">Temporary Stored</div>
+                    <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                    <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                    <!--begin::Position-->
+                </div>
+                <!--end::Person-->
+            </div>
+            <!--end::Item-->
+            <!--begin::Item-->
+            <div class="col text-center mb-9">
+                <!--begin::Photo-->
+                <a href="https://www.google.com/">
+                    <img alt="exh1"
+                        class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
+                        src="{% static "/web_app/media/exh/exh1.jfif"%}"></a>
+                <!--end::Photo-->
+                <!--begin::Person-->
+                <div class="mb-0">
+                    <!--begin::Position-->
+                    <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
+                    <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
+                    <div class="text fs-6 fw-bold">Temporary Stored</div>
+                    <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
+                    <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
+                    <!--begin::Position-->
+                </div>
+                <!--end::Person-->
+
+            </div>
+            <!--end::Item-->
+        </div>
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Team-->
+</div>
+<!-- end:: carouselViews-->
+{% endblock %}

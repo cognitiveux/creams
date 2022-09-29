@@ -1,0 +1,41 @@
+{% load staticfiles %}
+
+<html>
+    <head>
+        <meta http-equiv="refresh" content="1800">
+        <title>{{ title }}</title>
+        {% block css %}
+            <link rel="stylesheet" type="text/css" href="{% static "/web_app/css/montserrat-fonts.css" %}" media="screen" />
+            <link rel="stylesheet" type="text/css" href="{% static "/web_app/css/bootstrap-3.2.0-min.css" %}" media="screen" />
+            <link rel="stylesheet" type="text/css" href="{% static "/web_app/css/bootstrap-3.2.0-theme.css" %}" media="screen" />
+            <link rel="stylesheet" type="text/css" href="{% static "/web_app/css/lobster-fonts.css" %}" media="screen" />
+            <link rel="stylesheet" type="text/css" href="{% static "/web_app/css/styles.css" %}" media="screen" />
+        {% endblock %}
+
+        {% block scripts %}
+            <script type="text/javascript" src="{% static "/web_app/js/jquery-3.2.1.js" %}"></script>
+            <script type="text/javascript" src="{% static "/web_app/js/bootstrap-3.4.1.js" %}"></script>
+            <script type="text/javascript" src="{% static "/web_app/js/base.js" %}"></script>
+        {% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+            </div>
+        </nav>
+        <div class="page-header text-center header-padding">
+            <h1>{{ header_content }}</h1>
+        </div>
+        <div class="content container">
+            <div class="row">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+        <div id="overlay">
+            <div class="cv-spinner">
+                <span class="spinner"></span>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,84 @@
+version: '3'
+
+volumes:
+  creams-db-data:
+
+networks:
+  web:
+    external: true
+
+services:
+  creams-postgres:
+    image: postgres
+    restart: always
+    volumes:
+      - creams-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    networks:
+      - web
+  creams-nginx:
+    image: nginx
+    labels:
+      - traefik.frontend.rule=Host:creams-api.cognitiveux.net
+      - traefik.backend=creams-nginx
+      - traefik.port=80
+      - traefik.enable=true
+      - traefik.frontend.redirect.entryPoint=http
+    container_name: creams-nginx
+    volumes:
+      - ./config/nginx/:/etc/nginx/conf.d
+      - ./staticfiles:/static
+      - ./media/:/media
+    depends_on:
+      - creams-server
+    networks:
+      - web
+  creams-server:
+    build: .
+    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py collectstatic --no-input && gunicorn --config=/code/config/gunicorn/config.py creams_project.wsgi:application"
+    container_name: creams-server
+    env_file:
+      - ./django_variables.env
+    volumes:
+      - .:/code
+      - ./static/:/static
+      - ./media/:/media
+      # - ./config/nginx/certs/:/etc/certs
+      - ./staticfiles/:/code/staticfiles
+    expose:
+        - "10000"
+    depends_on:
+      - creams-postgres
+      - creams-rabbit
+    stdin_open: true
+    tty: true
+    networks:
+      - web
+  creams-rabbit:
+    image: "rabbitmq:3-management"
+    hostname: "creams-rabbit"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    labels:
+      NAME: "creams-rabbit"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - web
+  creams-celery:
+    build: .
+    env_file:
+      - ./django_variables.env
+    working_dir: /code
+    command:  ./init_celery.sh
+    links:
+      - creams-rabbit
+    volumes:
+      - .:/code
+    networks:
+      - web
+

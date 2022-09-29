@@ -1,0 +1,578 @@
+{% extends 'web_app/teacher_base.html' %}
+
+{% load staticfiles %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static "/web_app/js/metronic/custom/pages/user-profile/followers.js" %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid col-lg-9 col-11 col-xl-9 card-body p-lg-2">
+    <div class="mb-2 text-center">
+        <div class="row">
+            <div class="col-sm">
+                <!--begin::Title-->
+                <h3 class="fs-2hx text-dark mb-5">Exhibitions by students</h3>
+                <!--end::Title-->
+            </div>
+            <div class=" col-sm">
+                <!--begin::help--><a href="#"
+                    class="btn btn-success btn-success-custom fw-semibold px-8 py-3 teal ">Help</a>
+                <!--end::help-->
+                <!--begin::cancel--><a href="/web_app/teacher/assessment/"
+                    class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">Back to assignments</a>
+                <!--end::cancel-->
+                </button>
+                <!--end::Submit-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--begin::Container-->
+<div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+    <!--begin::Post-->
+    <div class="content flex-row-fluid" id="kt_content">
+        <!--begin::Row-->
+        <div class="row g-6 mb-6 g-xl-9 mb-xl-9">
+            <!--begin::Followers-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-warning bg-light-warning">N</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Nicolas
+                            Smith</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="/web_app/teacher/assessment/coadvisor/" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-warning bg-light-warning">A</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Alex
+                            Patterson</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="/web_app/teacher/assessment/main/" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-info bg-light-info">J</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">John
+                            Doe</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-success bg-light-success">X</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Xavier
+                            Doe</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-primary bg-light-primary">J</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Jeanne
+                            Petit</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-warning bg-light-warning">M</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Mary
+                            Jane</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-info bg-light-info">E</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Ellie
+                            Mackindosh</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-success bg-light-success">M</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Micheal
+                            Jonhson</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-warning bg-light-warning">S</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Steve
+                            Earl</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-success bg-light-success">K</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Kevin
+                            Looney</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-warning bg-light-warning">C</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Calvin
+                            Harris</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-success bg-light-success">P</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Patric
+                            Evra</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--end::Followers-->
+        </div>
+        <!--end::Row-->
+        <!--begin::Row(for show more)-->
+        <div class="row g-6 mb-6 g-xl-9 mb-xl-9 d-none" id="kt_followers_show_more_cards">
+            <!--begin::Followers-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-success bg-light-success">K</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Kevin
+                            Looney</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-warning bg-light-warning">C</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Calvin
+                            Harris</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--begin::Col-->
+            <div class="col-md-6 col-xxl-4">
+                <!--begin::Card-->
+                <div class="card">
+                    <!--begin::Card body-->
+                    <div class="card-body d-flex flex-center flex-column py-9 px-5">
+                        <!--begin::Avatar-->
+                        <div class="symbol symbol-65px symbol-circle mb-5">
+                            <span class="symbol-label fs-2x fw-semibold text-success bg-light-success">P</span>
+                        </div>
+                        <!--end::Avatar-->
+                        <!--begin::Name-->
+                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Patric
+                            Evra</a>
+                        <!--end::Name-->
+                        <!--begin::Info-->
+                        </br>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">VR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:3</div>
+                        <a href="#" class="fs-5 text-gray-800 fw-bold text-hover-primary mb-0">AR
+                            Exhibition</a>
+                        <div class="fw-semibold text-gray-400 mb-6">Remaining Artworks:1</div>
+                        </br>
+                        <!--end::Info-->
+                        <!--begin::Follow-->
+                        <a href="#" class="btn btn-success fw-semibold px-6 py-3">Assess</a>
+                        <!--end::Follow-->
+                    </div>
+                    <!--begin::Card body-->
+                </div>
+                <!--begin::Card-->
+            </div>
+            <!--end::Col-->
+            <!--end::Followers-->
+        </div>
+        <!--end::Row-->
+        <!--begin::Show more-->
+        <div class="d-flex flex-center">
+            <button class="btn btn-primary" id="kt_followers_show_more_button">
+                <!--begin::Indicator label-->
+                <span class="indicator-label">Show more</span>
+                <!--end::Indicator label-->
+                <!--begin::Indicator progress-->
+                <span class="indicator-progress">Please wait...
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                <!--end::Indicator progress-->
+            </button>
+        </div>
+        <!--end::Show more-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Container-->
+
+{% endblock %}

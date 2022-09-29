@@ -1,0 +1,313 @@
+{% extends 'web_app/teacher_base.html'%}
+
+{% load staticfiles %}
+
+{% block scripts %}
+
+{{block.super}}
+<script type="text/javascript" src="{% static "/web_app/js/customJS/new_exhibition.js" %}"></script>
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="d-flex flex-column flex-root">
+    <!--begin::Page-->
+    <div class="page d-flex flex-row flex-column-fluid">
+        <!--begin::Wrapper-->
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+            <!-- begin:: middle-->
+            <div class="card-body p-lg-17">
+                <div class="mb-18">
+                    <div class="row">
+                        <div class="col-sm">
+                            <!--begin::Title-->
+                            <h3 class="fs-2hx text-dark mb-5">Insert Artwork to DB</h3>
+                            <!--end::Title-->
+                        </div>
+                        <div class="col-sm">
+                            <!--begin::help--><a href="#"
+                                class="btn btn-success btn-success-custom fw-semibold px-8 py-3 teal ">Help</a>
+                            <!--end::help-->
+                            <!--begin::cancel--><a href="#"
+                                class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">cancel</a>
+                            <!--end::cancel-->
+                            <!--begin::Submit--><button type="submit"
+                                class="btn btn-success btn-success-custom fw-semibold px-10 py-3"
+                                id="kt_modal_new_target_submit">
+                                <!--begin::Indicator label-->
+                                <span class="indicator-label">Save and proceed to student selection</span>
+                                <!--end::Indicator label-->
+                                <!--begin::Indicator progress-->
+                                <span class="indicator-progress">Please wait... <span
+                                        class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                <!--end::Indicator progress-->
+                            </button>
+                            <!--end::Submit-->
+                        </div>
+                    </div><br><br><br>
+                    <div class=" py-5 py-lg-5" id="kt_toolbar">
+                        <!--begin::Container-->
+                        <div id="kt_modal_new_target" class="container-xxl py-5">
+                            <!--begin::Form-->
+                            <form action="artwork_submit" class="form mb-15 fv-plugins-bootstrap5 fv-plugins-framework"
+                                method="POST" id="kt_modal_new_target_form" enctype='multipart/form-data'>
+                                <input type='hidden' />
+                                {% csrf_token %}
+                                <!--begin::Row-->
+                                <div class="row gy-0 gx-10">
+                                    <div class="col-xl-4 blue">
+                                        <!--begin::Image input wrapper-->
+                                        <div class="mt-1 ">
+                                            <!--begin::Image placeholder-->
+                                            <style>
+                                                .image-input-placeholder {
+                                                    background-image: url('../../static/web_app/media/svg/files/blank-image.svg');
+                                                }
+
+                                                [data-theme="dark"] .image-input-placeholder {
+                                                    background-image: url('../../static/web_app/media/svg/files/blank-image-dark.svg');
+                                                }
+                                            </style>
+                                            <!--end::Image placeholder-->
+                                            <!--begin::Image input-->
+                                            <div class="image-input image-input-outline image-input-placeholder image-input-empty image-input-empty "
+                                                data-kt-image-input="true">
+                                                <!--begin::Preview existing avatar-->
+                                                <div class="image-input-wrapper adjust_size"
+                                                    style="background-image: url('');">
+                                                </div>
+                                                <!--end::Preview existing avatar-->
+                                                <!--begin::Edit-->
+                                                <label
+                                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                    data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                                    data-kt-initialized="1"><i class="bi bi-pencil-fill fs-7"></i>
+                                                    <!--begin::Inputs-->
+                                                    <input type="file" name="src" accept=".png, .jpg, .jpeg">
+                                                    <!--<input type="hidden" name="image_remove">-->
+                                                    <!--end::Inputs-->
+                                                </label>
+                                                <!--end::Edit-->
+                                                <!--begin::Cancel-->
+                                                <span
+                                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                    data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                                    data-kt-initialized="1"><i class="bi bi-x fs-2"></i></span>
+                                                <!--end::Cancel-->
+                                                <!--begin::Remove-->
+                                                <span
+                                                    class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                    data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                                    data-kt-initialized="1"><i class="bi bi-x fs-2"></i></span>
+                                                <!--end::Remove-->
+                                            </div>
+                                            <!--end::Image input-->
+                                            <!--begin::Label--><label class="fs-6 fw-semibold mb-3"><span>Select
+                                                    an intro image for
+                                                    the
+                                                    exhibition</span><i class=" ms-1 fs-7" data-bs-toggle="tooltip"
+                                                    aria-label="Allowed file types: png, jpg, jpeg."
+                                                    data-kt-initialized="1"></i></label>
+                                            <!--end::Label-->
+                                        </div>
+                                        <!--end::Image input wrapper-->
+                                    </div>
+                                    <div class="col-xl-8 red">
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="name"
+                                                    class="required fs-5 fw-semibold mb-2">Exhibition
+                                                    Title</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder="" name="name">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="year"
+                                                    class="required fs-5 fw-semibold mb-2">Year</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder="" name="year">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="height"
+                                                    class="required fs-5 fw-semibold mb-2">Height</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder=""
+                                                    name="height">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="width"
+                                                    class="required fs-5 fw-semibold mb-2">Width</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder="" name="width">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="depth"
+                                                    class="required fs-5 fw-semibold mb-2">Depth</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder="" name="depth">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="unit"
+                                                    class="required fs-5 fw-semibold mb-2">Unit</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder="" name="unit">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="user_fk"
+                                                    class="required fs-5 fw-semibold mb-2">user_fk</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder="" name="user_fk">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="technique"
+                                                    class="required fs-5 fw-semibold mb-2">Technique</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder=""
+                                                    name="technique">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="genre"
+                                                    class="required fs-5 fw-semibold mb-2">Genre</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder="" name="genre">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                        <!--begin::Input group-->
+                                        <div class="row mb-5">
+                                            <!--begin::Col-->
+                                            <div class="col-md-12 fv-row fv-plugins-icon-container"
+                                                id="exhibition_title_input">
+                                                <!--begin::Label--><label for="art_type"
+                                                    class="required fs-5 fw-semibold mb-2">art_type</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input--><input type="text"
+                                                    class="form-control form-control-solid" placeholder=""
+                                                    name="art_type">
+                                                <!--end::Input-->
+                                                <div class="fv-plugins-message-container invalid-feedback">
+                                                </div>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+                                    </div>
+                                </div>
+                                <!-- somethings missing-->
+                                <!--end::Row-->
+                            </form>
+                        </div>
+                        <!--end::Container-->
+                    </div>
+                </div>
+                <!--end::Team-->
+            </div>
+            <!-- end:: middle-->
+            <!--end::Body-->
+            <!--end::Card-->
+        </div>
+        <!-- end:: carouselViews2-->
+        <div class="toolbar py-5 py-lg-5" id="kt_toolbar">&nbsp;
+
+        </div>
+    </div>
+</div>
+{% endblock %}
