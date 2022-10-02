@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">CREAMS</string>
+
+    <string name="galleries_string">Galleries</string>
+    <string name="favourites_string">Favourites</string>
+    <string name="welcome_to_creams">Welcome to\nCREAMS</string>
+    <string name="galleries_outdoor">Galleries Outdoor</string>
+    <string name="dis_closest_gallery">Display the closest gallery</string>
+    <string name="or_textview">or</string>
+    <string name="dis_closest_artwork">Display the closest artwork</string>
+    <string name="allString"><![CDATA[All>]]></string>
+    <string name="galleries_near_you">Galleries near you</string>
+    <string name="galleriesFav">Galleries</string>
+    <string name="title_activity_maps">MapsActivity</string>
+    <string name="girl_with_pearl_earring">Girl with Pearl Earring</string>
+    <string name="starry_night">Starry Night</string>
+    <string name="gallery_title">Starry Night</string>
+    <string name="american_office_gothic">American Office Gothic</string>
+    <string name="nighthawks">Nighthawks</string>
+</resources>

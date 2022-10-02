@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".HomeFragment">
+
+    <TextView
+        android:id="@+id/orTextview2"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@id/dis_closest_artwork_button"
+        android:layout_marginTop="8dp"
+        android:text="@string/or_textview"
+        android:textAlignment="center"
+        android:textSize="17sp"
+        android:translationY="20dp" />
+
+    <TextView
+        android:id="@+id/textView_welcome_to_creams"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:fontFamily="@font/roboto_mono"
+        android:text="@string/welcome_to_creams"
+        android:textAlignment="center"
+        android:textSize="60sp"
+        android:translationY="0dp" />
+
+    <TextView
+        android:id="@+id/textView_galleries_outdoor"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/textView_welcome_to_creams"
+        android:fontFamily="@font/roboto_mono"
+        android:text="@string/galleries_outdoor"
+        android:textAlignment="center"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/dis_closest_gallery_button"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_below="@+id/textView_galleries_outdoor"
+        android:layout_centerInParent="true"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/dis_closest_gallery"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textStyle="italic"
+        android:translationY="20dp"
+        app:backgroundTint="@color/black" />
+
+    <Button
+        android:id="@+id/dis_closest_artwork_button"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_below="@+id/orTextview"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/dis_closest_artwork"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textStyle="italic"
+        android:translationY="25dp"
+        app:backgroundTint="@color/black" />
+
+    <TextView
+        android:id="@+id/orTextview"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_below="@+id/dis_closest_gallery_button"
+        android:text="@string/or_textview"
+        android:textAlignment="center"
+        android:textSize="17sp"
+        android:translationY="20dp" />
+
+    <TextView
+        android:id="@+id/textViewGalleriesNearYou"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/orTextview2"
+        android:fontFamily="@font/roboto_mono"
+        android:text="@string/galleries_near_you"
+        android:textAlignment="viewStart"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:translationY="30dp" />
+
+    <Button
+        android:id="@+id/button_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/orTextview2"
+        android:layout_alignParentEnd="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:fontFamily="@font/roboto_mono"
+        android:text="@string/allString"
+        android:textAlignment="viewEnd"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:translationY="20dp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="153dp"
+        android:layout_height="115dp"
+        android:layout_below="@+id/textViewGalleriesNearYou"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="86dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintHorizontal_bias="0.253"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="142dp"
+        android:layout_height="139dp"
+        android:layout_below="@+id/button_all"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="88dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView1"
+        android:layout_marginBottom="-24dp"
+        android:paddingStart="270dp"
+        android:text="@string/starry_night"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/imageView1" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_marginBottom="-25dp"
+        android:paddingStart="30dp"
+        android:text="@string/girl_with_pearl_earring"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+
+</RelativeLayout>
