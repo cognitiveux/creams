@@ -29,7 +29,8 @@ function myMap() {
                 icon: {
                     url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                 },
-                title: ACTIVE_ARTWORK_NAME,
+                //PoC2
+                //title: ACTIVE_ARTWORK_NAME,
                 id: ACTIVE_ARTWORK_ID,
                 descr: ACTIVE_DESCRIPTION,
             });
@@ -63,7 +64,7 @@ function getPoints() {
 }
 
 function fillScrollableWithAssets() {
-    let MEDIA = 'data:image/jpeg;base64,';
+    let MEDIA = '/media/';
     var xhr1 = new XMLHttpRequest();
     var artworks = [];
     // Setup our listener to process completed requests
@@ -91,24 +92,42 @@ function fillScrollableWithAssets() {
                 div3.classList.add('d-flex');
                 var div4 = document.createElement('div');
                 div4.classList.add('symbol', 'symbol-150px');
+                /**
+                 *  <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-200px h-100">
+                        <img id="as0" src="/media/images/monalisa.jpg" class="carou-pics">
+                    </div>
+                 */
 
                 var am1 = document.createElement('a');
-                //am1.classList.add('d-block', 'overlay', 'h-100');
-                //am1.setAttribute('data-fslightbox', 'lightbox-hot-sales');
-                //am1.setAttribute('href', MEDIA + as.src);
+                am1.classList.add('d-block', 'overlay', 'h-100');
+                am1.setAttribute('data-fslightbox', 'lightbox-hot-sales');
+                am1.setAttribute('href', MEDIA + as.src);
+                
+                var extra_div = document.createElement('div');
+                extra_div.classList.add('overlay-wrapper');
+                extra_div.classList.add('bgi-no-repeat');
+                extra_div.classList.add('bgi-position-center');
+                extra_div.classList.add('bgi-size-cover');
+                extra_div.classList.add('card-rounded');
+                extra_div.classList.add('min-h-200px');
+                extra_div.classList.add('h-100');
+
                 var img0 = document.createElement('img');
                 img0.setAttribute('id', 'as' + i);
                 img0.setAttribute('src', MEDIA + as.src);
-                img0.setAttribute('height', '100px');
-                img0.setAttribute('width', '200px');
-                am1.appendChild(img0);
+                img0.classList.add('carou-pics');
+                //img0.setAttribute('height', '100px');
+                //img0.setAttribute('width', '200px');
 
-                //var divm1 = document.createElement('div');
-                //divm1.classList.add('overlay-layer', 'card-rounded', 'bg-dark', 'bg-opacity-25');
-                //var i0 = document.createElement('i');
-                //i0.classList.add('bi', 'bi-eye-fill', 'fs-2x', 'text-white');
-                //divm1.appendChild(i0);
-                //am1.appendChild(divm1);
+                extra_div.appendChild(img0);
+                am1.appendChild(extra_div);
+
+                var divm1 = document.createElement('div');
+                divm1.classList.add('overlay-layer', 'card-rounded', 'bg-dark', 'bg-opacity-25');
+                var i0 = document.createElement('i');
+                i0.classList.add('bi', 'bi-eye-fill', 'fs-2x', 'text-white');
+                divm1.appendChild(i0);
+                am1.appendChild(divm1);
 
                 div4.appendChild(am1);
                 var div5 = document.createElement('div');
@@ -188,14 +207,13 @@ function submitOutdoor() {
         let lon = points[i].position.lng();
         let id = points[i].id;
         let descr = points[i].descr;
-        let exh = 1;
 
         var data = new FormData();
         data.append("lat", "" + lat);
         data.append("lon", "" + lon);
         data.append("description", "" + descr);
         data.append("artwork_fk", "" + id);
-        data.append("exhibition_fk", "" + exh);
+        data.append("exhibition_fk", "" + exh_id);
 
         var xhr = new XMLHttpRequest();
         xhr.withCredentials = true;

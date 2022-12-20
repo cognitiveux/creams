@@ -82,10 +82,26 @@ var KTSigninGeneral = function () {
                                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                             }).join(''));
                             resultObj = JSON.parse(jsonPayload);
-                            console.log(resultObj);
-                            console.log(resultObj.role);
+
+                            form.querySelector('[name="email"]').value = "";
+                            form.querySelector('[name="password"]').value = "";
+
+                            //form.submit(); // submit form
+                            if (resultObj.role === "INSTRUCTOR") {
+                                submitButton.removeAttribute('data-kt-indicator');
+                                console.log("Welcome " + resultObj.name + " " + resultObj.surname);
+                                location.href = '/web_app/teacher/dashboard/';
+
+                            } else if (resultObj.role === 'STUDENT') {
+                                console.log("Welcome " + resultObj.name + " " + resultObj.surname);
+                                submitButton.removeAttribute('data-kt-indicator');
+                                location.href = '/web_app/student/dashboard/';
+                            } else {
+                                alert("Something went wrong!");
+                            }
 
                             // Simulate ajax request
+                            /*
                             setTimeout(function () {
                                 // Hide loading indication
                                 submitButton.removeAttribute('data-kt-indicator');
@@ -103,9 +119,6 @@ var KTSigninGeneral = function () {
                                         confirmButton: "btn btn-primary"
                                     }
                                 }).then(function (result) {
-                                    /**
-                                     * This is where the login API should be added
-                                     */
                                     if (result.isConfirmed) {
 
                                         form.querySelector('[name="email"]').value = "";
@@ -125,7 +138,7 @@ var KTSigninGeneral = function () {
 
                                     }
                                 });
-                            }, 2000);
+                            }, 2000);*/
 
 
                         } else {
@@ -135,7 +148,7 @@ var KTSigninGeneral = function () {
 
                             // Enable button
                             submitButton.disabled = false;
-                            form.querySelector('[name="email"]').value = "";
+                            //form.querySelector('[name="email"]').value = "";
                             form.querySelector('[name="password"]').value = "";
                             Swal.fire({
                                 text: "Wrong credentials, please try again.",

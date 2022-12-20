@@ -32,9 +32,13 @@ RESOURCE_NAMES = {
     'reset_code': "Reset code",
     'user': "User",
     'artwork': "Artwork",
+    'assignment':"Assignment",
     'outdoor_exhibition': "OutdoorExhibition",
     'artwork_list': "List of artworks",
-    'vr_template': "VR exhibition template"
+    'vr_template': "VR exhibition template",
+    'exhibition':"Exhibition Assignment",
+    'vr_exhibition':"VR Exhibition Assignment",
+    'assessment' : "Assessment of an instructor"
     
 }
 
@@ -178,12 +182,17 @@ GENERAL_DESCRIPTIONS = {
     'resource_str': "A string value associated with the resource_name",
     'task_status': "The status of the task: ['PENDING', 'SUCCESS', 'FAILURE']",
     'artwork' : "Data of an artwork",
+    'outdoor_artwork' : "Data of an outdoor artwork",
     'outdoor_exhibition' : "Data of an outdoor exhibition",
+    'outdoor_exhibitions' : "Data of outdoor exhibitions",
     'artwork_list' : "List of artworks",
     'vr_template' : "VR Exhibition template",
     'user' : "Data of an instructor or a student",
     'assignment' : "Student assignment to exhibition",
     'exhibition' : "Data of an exhibition",
+    'exhibitions' : "List of exhibitions",
+    'vr_exhibition' : "A Virtual Reality exhibition",
+    'assessment' : "Assessment of an instructor"
 } 
 
 """
@@ -275,9 +284,17 @@ CUSTOM_RESPONSES = {
                             'type': openapi.TYPE_STRING,
                             'description': "Exhibition ID"
                         },
+                        'thumbnail': {
+                            'type': openapi.TYPE_OBJECT,
+                            'description': "Exhibition Thumbnail"
+                        },
                         'owner': {
                             'type': openapi.TYPE_INTEGER,
                             'description': "Exhibition owner"
+                        },
+                        'owner_name': {
+                            'type': openapi.TYPE_STRING,
+                            'description': "Exhibition owner name"
                         },
                         'start_date': {
                             'type': openapi.TYPE_OBJECT,
@@ -293,7 +310,7 @@ CUSTOM_RESPONSES = {
                         },
                         'artworks' : {
                             'type': openapi.TYPE_ARRAY,
-                            'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                            'description': GENERAL_DESCRIPTIONS.get('outdoor_artwork'),
                             'items': {
                                 'type': openapi.TYPE_OBJECT,
                                 'properties': {
@@ -374,7 +391,7 @@ CUSTOM_RESPONSES = {
                     'properties': { 
                         'artworks' : {
                             'type': openapi.TYPE_ARRAY,
-                            'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                            'description': GENERAL_DESCRIPTIONS.get('outdoor_artwork'),
                             'items': {
                                 'type': openapi.TYPE_OBJECT,
                                 'properties': {
@@ -475,7 +492,133 @@ CUSTOM_RESPONSES = {
                                         'type': openapi.TYPE_STRING,
                                         'description': "Exhibition Space"
                                     },
-                                    'src': {
+                                    'thumbnail': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Exhibition Thumbnail"
+                                    },
+                                    'description': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Description"
+                                    },
+                                    'status': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Status"
+                                    },
+                                    'participants': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Exhibition participants count"
+                                    },
+                                }
+                            }    
+                        },
+                    }
+                },
+            }
+        },
+    },
+    'getIndoorExhibitions': {
+        200: {
+            'type': openapi.TYPE_OBJECT,
+            'properties': {
+                'message': {
+                    'type': openapi.TYPE_STRING,
+                    'description': GENERAL_DESCRIPTIONS.get('message')
+                },
+                'resource_obj':{
+                    'type': openapi.TYPE_OBJECT,
+                    'properties': { 
+                        'exhibitions' : {
+                            'type': openapi.TYPE_ARRAY,
+                            'description': GENERAL_DESCRIPTIONS.get('exhibitions'),
+                            'items': {
+                                'type': openapi.TYPE_OBJECT,
+                                'properties': {
+                                    'id': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Exhibition ID"
+                                    },
+                                    'title': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Title"
+                                    },
+                                    'start_date': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Start Date"
+                                    },
+                                    'end_date': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "End Date"
+                                    },
+                                    'space': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Space"
+                                    },
+                                    'thumbnail': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Exhibition Thumbnail"
+                                    },
+                                    'description': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Description"
+                                    },
+                                    'status': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Status"
+                                    },
+                                    'participants': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Exhibition participants count"
+                                    },
+                                }
+                            }    
+                        },
+                    }
+                },
+            }
+        },
+    },
+    'getIndoorExhibitionsOfStudent': {
+        200: {
+            'type': openapi.TYPE_OBJECT,
+            'properties': {
+                'message': {
+                    'type': openapi.TYPE_STRING,
+                    'description': GENERAL_DESCRIPTIONS.get('message')
+                },
+                'resource_obj':{
+                    'type': openapi.TYPE_OBJECT,
+                    'properties': { 
+                        'exhibitions' : {
+                            'type': openapi.TYPE_ARRAY,
+                            'description': GENERAL_DESCRIPTIONS.get('exhibitions'),
+                            'items': {
+                                'type': openapi.TYPE_OBJECT,
+                                'properties': {
+                                    'id': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Exhibition ID"
+                                    },
+                                    'title': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Title"
+                                    },
+                                    'instructor': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Instructors name"
+                                    },
+                                    'start_date': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Start Date"
+                                    },
+                                    'end_date': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "End Date"
+                                    },
+                                    'space': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition Space"
+                                    },
+                                    'thumbnail': {
                                         'type': openapi.TYPE_OBJECT,
                                         'description': "Exhibition Thumbnail"
                                     },
@@ -548,6 +691,43 @@ CUSTOM_RESPONSES = {
             }
         },
     },
+    'getStudentsOfAnAssignment': {
+        200: {
+            'type': openapi.TYPE_OBJECT,
+            'properties': {
+                'message': {
+                    'type': openapi.TYPE_STRING,
+                    'description': GENERAL_DESCRIPTIONS.get('message')
+                },
+                'resource_obj':{
+                    'type': openapi.TYPE_OBJECT,
+                    'properties': { 
+                        'students' : {
+                            'type': openapi.TYPE_ARRAY,
+                            'description': GENERAL_DESCRIPTIONS.get('user'),
+                            'items': {
+                                'type': openapi.TYPE_OBJECT,
+                                'properties': {
+                                    'id': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "User ID"
+                                    },
+                                    'name': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "User name"
+                                    },
+                                    'surname': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "User surname"
+                                    },
+                                }
+                            }    
+                        },
+                    }
+                },
+            }
+        },
+    },
     'getAllOutdoorArtworks': {
         200: {
             'type': openapi.TYPE_OBJECT,
@@ -561,7 +741,7 @@ CUSTOM_RESPONSES = {
                     'properties': { 
                         'artworks' : {
                             'type': openapi.TYPE_ARRAY,
-                            'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                            'description': GENERAL_DESCRIPTIONS.get('artwork_list'),
                             'items': {
                                 'type': openapi.TYPE_OBJECT,
                                 'properties': {
@@ -638,7 +818,7 @@ CUSTOM_RESPONSES = {
                     'properties': { 
                         'artworks' : {
                             'type': openapi.TYPE_ARRAY,
-                            'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                            'description': GENERAL_DESCRIPTIONS.get('outdoor_artwork'),
                             'items': {
                                 'type': openapi.TYPE_OBJECT,
                                 'properties': {
@@ -734,6 +914,51 @@ CUSTOM_RESPONSES = {
             }
         }    
     },
+    'getAllVRTemplates' : {
+                200: {
+            'type': openapi.TYPE_OBJECT,
+            'properties': {
+                'message': {
+                    'type': openapi.TYPE_STRING,
+                    'description': GENERAL_DESCRIPTIONS.get('message')
+                },
+                'resource_obj':{
+                    'type': openapi.TYPE_OBJECT,
+                    'properties': { 
+                        'templates' : {
+                            'type': openapi.TYPE_ARRAY,
+                            'description': GENERAL_DESCRIPTIONS.get('vr_template'),
+                            'items': {
+                                'type': openapi.TYPE_OBJECT,
+                                'properties': {
+                                    'id': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Template ID"
+                                    },
+                                    'basis': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Template"
+                                    },
+                                    'name': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Template Name"
+                                    },
+                                    'rooms': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Number of rooms in the exhibition"
+                                    },
+                                    'thumbnail': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Thumbnail of the exhibition"
+                                    },
+                                }
+                            }
+                        }
+                    },
+                }
+            }    
+        }
+    },
     'getAllOutdoorExhibitions': {
         200: {
             'type': openapi.TYPE_OBJECT,
@@ -747,13 +972,17 @@ CUSTOM_RESPONSES = {
                     'properties': {
                         'exhibitions' : {
                             'type': openapi.TYPE_ARRAY,
-                            'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                            'description': GENERAL_DESCRIPTIONS.get('exhibitions'),
                             'items': {
                                 'type': openapi.TYPE_OBJECT,
                                 'properties': { 
                                     'id': {
                                         'type': openapi.TYPE_INTEGER,
                                         'description': "Exhibition ID"
+                                    },
+                                    'thumbnail': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Exhibition Thumbnail"
                                     },
                                     'title': {
                                         'type': openapi.TYPE_STRING,
@@ -762,6 +991,10 @@ CUSTOM_RESPONSES = {
                                     'owner': {
                                         'type': openapi.TYPE_INTEGER,
                                         'description': "Exhibition owner"
+                                    },
+                                    'owner_name': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition owner name"
                                     },
                                     'start_date': {
                                         'type': openapi.TYPE_OBJECT,
@@ -777,7 +1010,7 @@ CUSTOM_RESPONSES = {
                                     },
                                     'artworks' : {
                                         'type': openapi.TYPE_ARRAY,
-                                        'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                                        'description': GENERAL_DESCRIPTIONS.get('artwork_list'),
                                         'items': {
                                             'type': openapi.TYPE_OBJECT,
                                             'properties': {
@@ -849,6 +1082,60 @@ CUSTOM_RESPONSES = {
             },
             }
     },
+    'getAllIndoorExhibitions': {
+        200: {
+            'type': openapi.TYPE_OBJECT,
+            'properties': {
+                'message': {
+                    'type': openapi.TYPE_STRING,
+                    'description': GENERAL_DESCRIPTIONS.get('message')
+                },
+                'resource_obj':{
+                    'type': openapi.TYPE_OBJECT,
+                    'properties': {
+                        'exhibitions' : {
+                            'type': openapi.TYPE_ARRAY,
+                            'description': GENERAL_DESCRIPTIONS.get('exhibitions'),
+                            'items': {
+                                'type': openapi.TYPE_OBJECT,
+                                'properties': { 
+                                    'id': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Exhibition ID"
+                                    },
+                                    'thumbnail': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Exhibition Thumbnail"
+                                    },
+                                    'title': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition ID"
+                                    },
+                                    'owner': {
+                                        'type': openapi.TYPE_INTEGER,
+                                        'description': "Exhibition owner"
+                                    },
+                                    'owner_name': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition owner name"
+                                    },
+                                    'start_date': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Exhibition start-date"
+                                    },
+                                    'end_date': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Exhibition end-date"
+                                    },
+                                }
+                            }
+                            
+                        },
+                    }
+                },
+            },
+            }
+    },
     'getAllOutdoorExhibitionsSorted': {
         200: {
             'type': openapi.TYPE_OBJECT,
@@ -862,7 +1149,7 @@ CUSTOM_RESPONSES = {
                     'properties': {
                         'exhibitions' : {
                             'type': openapi.TYPE_ARRAY,
-                            'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                            'description': GENERAL_DESCRIPTIONS.get('outdoor_exhibitions'),
                             'items': {
                                 'type': openapi.TYPE_OBJECT,
                                 'properties': { 
@@ -874,9 +1161,17 @@ CUSTOM_RESPONSES = {
                                         'type': openapi.TYPE_STRING,
                                         'description': "Exhibition ID"
                                     },
+                                    'thumbnail': {
+                                        'type': openapi.TYPE_OBJECT,
+                                        'description': "Exhibition Thumbnail"
+                                    },
                                     'owner': {
                                         'type': openapi.TYPE_INTEGER,
                                         'description': "Exhibition owner"
+                                    },
+                                    'owner_name': {
+                                        'type': openapi.TYPE_STRING,
+                                        'description': "Exhibition owner name"
                                     },
                                     'start_date': {
                                         'type': openapi.TYPE_OBJECT,
@@ -892,7 +1187,7 @@ CUSTOM_RESPONSES = {
                                     },
                                     'artworks' : {
                                         'type': openapi.TYPE_ARRAY,
-                                        'description': GENERAL_DESCRIPTIONS.get('outdoor artworks'),
+                                        'description': GENERAL_DESCRIPTIONS.get('artwork_list'),
                                         'items': {
                                             'type': openapi.TYPE_OBJECT,
                                             'properties': {
@@ -994,6 +1289,9 @@ FIELD_TYPES = {
     'user': openapi.TYPE_OBJECT,
     'assignment': openapi.TYPE_OBJECT,
     'exhibition': openapi.TYPE_OBJECT,
+    'vr_exhibition': openapi.TYPE_OBJECT,
+    'exhibitions': openapi.TYPE_OBJECT,
+    'assessment' : openapi.TYPE_STRING
     
 }
 
@@ -1028,7 +1326,9 @@ ENUM_VARIABLES = {
     'getOutdoorExhibition':{},
     'getStudentsArtworks':{},
     'getVRTemplate':{},
+    'getAllVRTemplates':{},
     'getAllOutdoorExhibitions':{},
+    'getAllIndoorExhibitions':{},
     'getAllOutdoorExhibitionsSorted':{},
     'getAllOutdoorArtworks':{},
     'submitOutdoorArtwork':{},
@@ -1036,7 +1336,13 @@ ENUM_VARIABLES = {
     'ExhibitionCreate':{},
     'getAllUsers':{},
     'AssignExhibition':{},
+    'AssignAdvisory':{},
     'getFilteredExhibitions':{},
+    'getIndoorExhibitions':{},
+    'getIndoorExhibitionsOfStudent':{},
+    'getStudentsOfAnAssignment':{},
+    'createVR':{},
+    'GeneralAssessmentCreate':{},
 }
 
 
@@ -1380,6 +1686,31 @@ VIEWS_DESCRIPTION = {
             ]
         },
     ],
+    'createVR': [
+        {
+            'status_code': [200],
+            'variables': [
+                'message',
+                'resource_name',
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details',
+            ]
+        },
+        {
+            'status_code': [401, 415, 500],
+            'variables': [
+                'message',
+            ]
+        },
+    ],
     'ExhibitionCreate': [
         {
             'status_code': [200],
@@ -1475,11 +1806,18 @@ VIEWS_DESCRIPTION = {
             ],
         },
         {
+            'status_code': [404],
+            'variables': [
+                'message',
+                'resource_name',
+            ]
+        },
+        {
             'status_code': [415, 500],
             'variables': [
                 'message',
             ]
-        },],
+        },],  
     'getOutdoorExhibition' : [{
             'status_code': [200],
             'variables': [
@@ -1497,6 +1835,13 @@ VIEWS_DESCRIPTION = {
                 'already_exists_fields',
                 'error_details'
             ],
+        },
+        {
+            'status_code': [404],
+            'variables': [
+                'message',
+                'resource_name',
+            ]
         },
         {
             'status_code': [415, 500],
@@ -1523,7 +1868,7 @@ VIEWS_DESCRIPTION = {
             ],
         },
         {
-            'status_code': [415, 500],
+            'status_code': [401, 415, 500],
             'variables': [
                 'message',
             ]
@@ -1552,11 +1897,66 @@ VIEWS_DESCRIPTION = {
                 'message',
             ]
         },],
-    'getVRTemplate' : [{
+    'getAllOutdoorArtworksSorted': [{
             'status_code': [200],
             'variables': [
                 'message',
                 'artwork_list',
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
+    'getVRTemplate' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                'vr_template',
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [404],
+            'variables': [
+                'message',
+                'resource_name',
+            ]
+        },
+        {
+            'status_code': [415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
+    'getAllVRTemplates' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                'vr_template',
                 
             ]
         },
@@ -1600,6 +2000,54 @@ VIEWS_DESCRIPTION = {
                 'message',
             ]
         },],
+    'getAllOutdoorExhibitionsSorted' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                'artwork_list',
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
+    'getAllIndoorExhibitions' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                'exhibitions',
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
     'getAllUsers' : [{
             'status_code': [200],
             'variables': [
@@ -1619,7 +2067,7 @@ VIEWS_DESCRIPTION = {
             ],
         },
         {
-            'status_code': [415, 500],
+            'status_code': [401, 415, 500],
             'variables': [
                 'message',
             ]
@@ -1642,7 +2090,30 @@ VIEWS_DESCRIPTION = {
             ],
         },
         {
-            'status_code': [415, 500],
+            'status_code': [401, 415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
+    'AssignAdvisory' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [401, 415, 500],
             'variables': [
                 'message',
             ]
@@ -1666,11 +2137,115 @@ VIEWS_DESCRIPTION = {
             ],
         },
         {
-            'status_code': [415, 500],
+            'status_code': [401, 415, 500],
             'variables': [
                 'message',
             ]
         },],
+    'getIndoorExhibitions' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                'exhibitions'
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [401, 415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
+    'getIndoorExhibitionsOfStudent' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                'exhibitions'
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [401, 415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
+    'getStudentsOfAnAssignment' : [{
+            'status_code': [200],
+            'variables': [
+                'message',
+                'user'
+                
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details'
+            ],
+        },
+        {
+            'status_code': [404],
+            'variables': [
+                'message',
+                'resource_name',
+            ]
+        },
+        {
+            'status_code': [401, 415, 500],
+            'variables': [
+                'message',
+            ]
+        },],
+    'GeneralAssessmentCreate': [
+        {
+            'status_code': [200],
+            'variables': [
+                'message',
+                'resource_name',
+            ]
+        },
+        {
+            'status_code': [400],
+            'variables': [
+                'message',
+                'bad_formatted_fields',
+                'missing_required_fields',
+                'already_exists_fields',
+                'error_details',
+            ]
+        },
+        {
+            'status_code': [401,500],
+            'variables': [
+                'message',
+            ]
+        },
+    ],
 }
 
 

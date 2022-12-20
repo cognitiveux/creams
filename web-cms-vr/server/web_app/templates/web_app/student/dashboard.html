@@ -1,4 +1,4 @@
-{% extends 'web_app/student_base.html' %}
+{% extends 'web_app/bases/student_base.html' %}
 
 {% load staticfiles %}
 
@@ -42,7 +42,7 @@
             <h3 class="fs-2hx text-dark mb-5"> &nbsp; My Exhibitions</h3>
             <!--end::Title-->
             <!--begin::Sub-title-->
-            <div class="fs-5 text-muted fw-semibold" id="exh_num"> &nbsp;&nbsp; You are assigned to {{exh_num}} Exhibitions. To manage your exhibitions go to the appropriate menu.</div>
+            <div class="fs-5 text-muted fw-semibold" id="exh_num"> &nbsp;&nbsp; </div>
             <!--end::Sub-title=-->
         </div>
         <!--end::Heading-->
@@ -55,111 +55,7 @@
                 data-tns-prev-button="#kt_team_slider_prev" data-tns-next-button="#kt_team_slider_next"
                 data-tns-responsive="{1200: {items: 3}, 992: {items: 2}}" id="exh_carousel">
                 <!--begin::Item-->
-                <div class="col text-center mb-9">
-                    <!--begin::Photo-->
-                    <a href="https://www.google.com/">
-                        <img alt="exh1"
-                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
-                            src="{% static "/web_app/media/exh/exh4.jfif" %}"></a>
-                    <!--end::Photo-->
-                    <!--begin::Person-->
-                    <div class="mb-0">
-                        <!--begin::Position-->
-                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
-                        <div class="text fs-6 fw-bold">Temporary Stored</div>
-                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
-                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
-                        <!--begin::Position-->
-                    </div>
-                    <!--end::Person-->
-                </div>
-                <!--end::Item-->
-                <!--begin::Item-->
-                <div class="col text-center mb-9">
-                    <!--begin::Photo-->
-                    <a href="https://www.google.com/">
-                        <img alt="exh1" id="testpic"
-                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
-                            src="{% static "/web_app/media/exh/exh3.jfif" %}"
-                            ></a>
-                    <!--end::Photo-->
-                    <!--begin::Person-->
-                    <div class="mb-0">
-                        <!--begin::Position-->
-                        <div class="text-muted fs-6 fw-semibold">Remembering the future</div>
-                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
-                        <div class="text fs-6 fw-bold">Temporary Stored</div>
-                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
-                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
-                        <!--begin::Position-->
-                    </div>
-                    <!--end::Person-->
-                </div>
-                <!--end::Item-->
-                <!--begin::Item-->
-                <div class="col text-center mb-9">
-                    <!--begin::Photo-->
-                    <a href="https://www.google.com/">
-                        <img alt="exh1"
-                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
-                            src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
-                    <!--end::Photo-->
-                    <!--begin::Person-->
-                    <div class="mb-0">
-                        <!--begin::Position-->
-                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
-                        <div class="text fs-6 fw-bold">Temporary Stored</div>
-                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
-                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
-                        <!--begin::Position-->
-                    </div>
-                    <!--end::Person-->
-                </div>
-                <!--end::Item-->
-                <!--begin::Item-->
-                <div class="col text-center mb-9">
-                    <!--begin::Photo-->
-                    <a href="https://www.google.com/">
-                        <img alt="exh1"
-                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
-                            src="{% static "/web_app/media/exh/exh1.jfif" %}"></a>
-                    <!--end::Photo-->
-                    <!--begin::Person-->
-                    <div class="mb-0">
-                        <!--begin::Position-->
-                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
-                        <div class="text fs-6 fw-bold">Temporary Stored</div>
-                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
-                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
-                        <!--begin::Position-->
-                    </div>
-                    <!--end::Person-->
 
-                </div>
-                <!--end::Item-->
-                <!--begin::Item-->
-                <div class="col text-center mb-9">
-                    <!--begin::Photo-->
-                    <a href="https://www.google.com/">
-                        <img alt="exh1"
-                            class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
-                            src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
-                    <!--end::Photo-->
-                    <!--begin::Person-->
-                    <div class="mb-0">
-                        <!--begin::Position-->
-                        <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                        <div class="text-muted fs-6 fw-semibold">Student: Marlle Manning</div>
-                        <div class="text fs-6 fw-bold">Temporary Stored</div>
-                        <div class="text-muted fs-6 fw-semibold">Type: Indoor</div>
-                        <div class="text-muted fs-6 fw-semibold">21 MAY 2022 - 30 MAY 2022</div>
-                        <!--begin::Position-->
-                    </div>
-                    <!--end::Person-->
-                </div>
                 <!--end::Item-->
             </div>
             <!--end::Wrapper-->
@@ -209,7 +105,7 @@
             <h3 class="fs-2hx text-dark mb-5"> &nbsp; My Artworks</h3>
             <!--end::Title-->
             <!--begin::Sub-title-->
-            <div class="fs-5 text-muted fw-semibold" id="art_num"> &nbsp;&nbsp; You have uploaded {{art_num}} artworks. To manage your artworks go to the appropriate menu.</div>
+            <div class="fs-5 text-muted fw-semibold" id="art_num"> &nbsp;&nbsp; </div>
             <!--end::Sub-title=-->
         </div>
         <!--end::Heading-->

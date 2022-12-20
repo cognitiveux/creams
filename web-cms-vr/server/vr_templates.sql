@@ -1,0 +1,2 @@
+insert into web_app_vr_templates values('1','/media/templates/picasso.txt','Four Rooms','4','/media/templates/thumbnails/picasso.png');
+insert into web_app_vr_templates values('2','/media/templates/oneroom.txt','One Room','1','/media/templates/thumbnails/oneroom.png');

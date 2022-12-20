@@ -2,6 +2,7 @@ version: '3'
 
 volumes:
   creams-db-data:
+  creams-pgadmin-data:
 
 networks:
   web:
@@ -9,16 +10,33 @@ networks:
 
 services:
   creams-postgres:
+    container_name: postgres_creams
     image: postgres
     restart: always
     volumes:
       - creams-db-data:/var/lib/postgresql/data
     environment:
       POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_USER: postgres
+      PGDATA: /var/lib/postgresql/data
     ports:
      - "5432:5432"
     networks:
       - web
+  creams-pgadmin:
+   container_name: pgadmin
+   image: dpage/pgadmin4:5.5
+   restart: always
+   environment:
+     PGADMIN_DEFAULT_EMAIL: admin@creams.com
+     PGADMIN_DEFAULT_PASSWORD: password
+     PGADMIN_LISTEN_PORT: 80
+   ports:
+     - "8081:80"
+   volumes:
+     - creams-pgadmin-data:/var/lib/pgadmin
+   networks:
+    - web
   creams-server:
     build: .
     command: bash -c "python3 manage.py makemigrations web_app && python3 manage.py migrate && python3 manage.py collectstatic --no-input && python3 manage.py runserver 0.0.0.0:10000"

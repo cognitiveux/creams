@@ -1,0 +1,98 @@
+<a-scene id="scene" embedded loading-screen="enabled: false;" light="defaultLightsEnabled: false">
+    <a-assets>
+        <img id="white" src="/static/web_app/media/picassoExhibition/Textures/white.bmp"  type="texture">
+        <img id="gray0" src="/static/web_app/media/picassoExhibition/Textures/gray_0.png" type="texture">
+        <img id="gray1" src="/static/web_app/media/picassoExhibition/Textures/gray_1.png" type="texture">
+        <img id="gray2" src="/static/web_app/media/picassoExhibition/Textures/gray_2.png" type="texture">
+        <img id="gray3" src="/static/web_app/media/picassoExhibition/Textures/gray_3.png" type="texture">
+        <img id="gray4" src="/static/web_app/media/picassoExhibition/Textures/gray_4.png" type="texture">
+        <img id="lev" src="/static/web_app/media/picassoExhibition/Textures/levander.png" type="texture">
+        <img id="red" src="/static/web_app/media/picassoExhibition/Textures/red.png" type="texture">
+        <img crossorigin="anonymous" id="groundTexture"
+            src="/static/web_app/media/picassoExhibition/Textures/blueCarpet.jpg" type="texture">
+        <img crossorigin="anonymous" id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg"
+            type="texture">
+        <img id="marble1" src="/static/web_app/media/picassoExhibition/Textures/BiancoMarble/BIANCO-ao.jpg"
+            type="texture">
+
+        <a-asset-item id="cityModel" type="object"
+            src="https://cdn.aframe.io/test-models/models/glTF-2.0/virtualcity/VC.gltf"></a-asset-item>
+        <a-asset-item type="object" id="sofa" src="/static/web_app/media/3D/sofa/source/Unity2Skfb/Unity2Skfb.gltf">
+        </a-asset-item>
+        <a-asset-item id="table" type="object" src="/static/web_app/media/3D/round_table_and_chairs/scene.gltf">
+        </a-asset-item>
+        <a-asset-item id="car" type="object" src="/static/web_app/media/3D/mercedes/scene.gltf">
+        </a-asset-item>
+    </a-assets>
+    <a-entity light="type: ambient; color: #BBB"></a-entity>
+
+    <a-sky height="2048" radius="30" src="#skyTexture" theta-length="90" width="2048" segments-height="5"
+        segments-width="8"></a-sky>
+    <a-plane id="floor" material="src:#gray1 ; repeat:7 7;" rotation="-90 0 0" position="0 -0.01 0" height="100"
+        width="100"></a-plane>
+
+    <a-camera id="camera" position="2.5 2.6 6"></a-camera>
+    <a-entity cursor="rayOrigin:mouse"></a-entity>
+
+    <rw-room pposition="0 0 0">
+        <rw-wall id="room0-wall1" position="-10 0 -10" height="9" material="src:#gray2 ; repeat:0.5 0.5;"
+            id="left-wall">
+            <a-entity id="label1" cale="1.5 1.5 1" position="12 7.5 0.054"
+                text="color: #000000 ;width: 5; height: 5; value: Insert Artwork"></a-entity>
+            <a-box id="art1" position="4 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art11" position="10 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art12" position="16 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-entity gltf-model="#sofa" position="20 0 2" scale="2 2 2" play-all-model-animations modify-materials>
+            </a-entity>
+            <a-entity gltf-model="#table" position="10 0 10" scale="2 2 2" play-all-model-animations modify-materials>
+            </a-entity>
+            <a-entity gltf-model="#car" position="-3 0 7.2" scale="3 3 3" play-all-model-animations modify-materials>
+            </a-entity>
+
+        </rw-wall>
+        <rw-wall id="room0-wall2" position=" 10 0 -10" height="9" material="src:#gray2 ; repeat:0.5 0.5;"
+            id="back-wall">
+            <a-entity id="label2" cale="1.5 1.5 1" position="12 7.5 0.054"
+                text="color: #000000 ;width: 5; height: 5; value: Insert Artwork"></a-entity>
+            <a-box id="art2" position="4 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art3" position="10 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art4" position="16 4.5 0.2" scale="5 5 0" ></a-box>
+        </rw-wall>
+        <rw-wall id="room0-wall3" position=" 10 0 10" height="9" material="src:#gray2 ; repeat:0.5 0.5;"
+            id="right-wall">
+            <a-entity id="label3" cale="1.5 1.5 1" position="12 7.5 0.054"
+                text="color: #000000 ;width: 5; height: 5; value: Insert Artwork"></a-entity>
+            <a-box id="art5" position="4 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art6" position="10 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art7" position="16 4.5 0.2" scale="5 5 0" ></a-box>
+        </rw-wall>
+        <rw-wall id="room0-wall4" position="-10 0 10" height="9" material="src:#gray2 ; repeat:0.5 0.5;"
+            id="front-wall">
+            <a-entity id="label4" cale="1.5 1.5 1" position="12 7.5 0.054"
+                text="color: #000000 ;width: 5; height: 5; value: Insert Artwork"></a-entity>
+            <a-box id="art8" position="4 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art9" position="10 4.5 0.2" scale="5 5 0" ></a-box>
+            <a-box id="art10" position="16 4.5 0.2" scale="5 5 0" ></a-box>
+        </rw-wall>
+        <rw-ceiling id="room0-ceiling" material="src:#white ; repeat:0.5 0.5;"></rw-ceiling>
+
+    </rw-room>
+
+    <!-- OUTSIDE ROOM -->
+    <rw-room position="0 0 0" outside="true" material="color:#AAA">
+        <rw-wall position="-10 0 -10" height="9" material="src:#gray2 ; repeat:0.5 0.5;" id="left-wall"></rw-wall>
+        <rw-wall position=" 10 0 -10" height="9" material="src:#gray2 ; repeat:0.5 0.5;" id="back-wall"></rw-wall>
+        <rw-wall position=" 10 0  10" height="9" material="src:#gray2 ; repeat:0.5 0.5;" id="right-wall">
+        </rw-wall>
+        <rw-wall position="-10 0  10" height="9" material="src:#gray2 ; repeat:0.5 0.5;" id="front-wall">
+            <rw-floor></rw-floor>
+            <rw-ceiling></rw-ceiling>
+            <rw-sides></rw-sides>
+            </rw-doorlink>
+        </rw-wall>
+
+    </rw-room>
+
+
+
+</a-scene>

@@ -1,149 +1,297 @@
-{% extends 'web_app/student_base.html' %}
+{% extends 'web_app/bases/student_base.html' %}
 
 {% load staticfiles %}
 
 
-
-
 {% block toolbar %}
-<a href="/web_app/student/exhibitions/" class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">Cancel</a>
-<span>&nbsp;</span>
-<a href="#" class="btn btn-warning fw-bold" id="save" onclick="saveExhibit()">Save Exhibition</a>
+<a href="/web_app/student/exhibitions/" class="menu-item  here me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        My Exhibitions
+    </span>
+    <!--end:Menu link-->
+</a>
+
+<a href="/web_app/student/artworks/" class="menu-item  me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        My Artworks
+    </span>
+    <!--end:Menu link-->
+</a>
+<div>
+    <a href="/web_app/student/exhibitions/"
+        class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">Cancel</a>
+    <a href="#" class="btn btn-warning fw-bold" id="save" onclick="saveExhibit()">Save Exhibition</a>
+</div>
 {% endblock %}
 
 {% block content %}
 <!---->
 
-<script src="https://aframe.io/releases/1.3.0/aframe.js"></script>
+<script src="{% static "/web_app/js/aframe/releases/1.3.0/aframe.js" %}"></script>
 <script src="{% static "/web_app/js/aframe/aframe-room-component.min.js" %}"></script>
-<script defer src="{% static "/web_app/js/aframe/editor/editorFunctionalities.js" %}"></script>
 <script defer src="{% static "/web_app/js/aframe/editor/physics.js" %}"></script>
 <script defer src="{% static "/web_app/js/aframe/editor/system.js" %}"></script>
-<script src="https://rawgit.com/IdeaSpaceVR/aframe-ui-modal-component/master/dist/aframe-ui-modal-component.min.js">
+<script defer src="{% static "/web_app/js/aframe/editor/editorFunctionalities.js" %}"></script>
+<script defer src="{% static "/web_app/js/aframe/editor/actions/click.js" %}"></script>
+<script src="{% static "/web_app/js/aframe/editor/action_addition.js" %}"></script>
+<script>
+    const getArtworksFlag = '{{reloaded}}';
+
+    /**
+     * Player for animation clips. Intended to be compatible with any model format that supports
+     * skeletal or morph animations.
+     */
+    AFRAME.registerComponent('play-all-model-animations', {
+        init: function () {
+            this.model = null;
+            this.mixer = null;
+
+            var model = this.el.getObject3D('mesh');
+            if (model) {
+                this.load(model);
+            } else {
+                this.el.addEventListener('model-loaded', function (e) {
+                    this.load(e.detail.model);
+                }.bind(this));
+            }
+        },
+
+        load: function (model) {
+            this.model = model;
+            this.mixer = new THREE.AnimationMixer(model);
+            this.model.animations.forEach(animation => {
+                this.mixer.clipAction(animation, model).play();
+            });
+        },
+
+        tick: function (t, dt) {
+            if (this.mixer && !isNaN(dt)) {
+                this.mixer.update(dt / 1000);
+            }
+        }
+    });
+    AFRAME.registerComponent('modify-materials', {
+        init: function () {
+            // Wait for model to load.
+            this.el.addEventListener('model-loaded', () => {
+                // Grab the mesh / scene.
+                const obj = this.el.getObject3D('mesh');
+                // Go over the submeshes and modify materials we want.
+                obj.traverse(node => {
+                    if (node.name.indexOf('ship') !== -1) {
+                        node.material.color.set('red');
+                    }
+                });
+            });
+        }
+    }); {
+        {
+            x_script | safe
+        }
+    }
 </script>
+
 <div id="editor_holder" class="toolbar py-5 py-lg-5 ">
     <div class="container-fluid py-1 edit_pad">
-    <div class="row gy-0 gx-14 ">
-        <div id="myEmbeddedScene" class="col-sm">
-            {% block basis %}
+        <div class="row gy-0 gx-14 ">
+            <div id="myEmbeddedScene" class="col-sm">
+                {% block basis %}
                 {{basis|safe }}
-            {% endblock %}
-        </div>
-        <div id="control_panel" class="col-sm">  
-            <div class="tab-pane fade show active" id="kt_general_widget_1_3">
-                <!--begin::Tables Widget 5-->
-                <div class="card">
-                    <!--begin::Header-->
-                    <div class="card-header border-0 pt-5">
-                        <div class="card-toolbar">
-                            <ul class="nav">
-                                <li class="nav-item">
-                                    <a id="rm1" class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1 active"  data-bs-toggle="tab" href="#kt_table_widget_5_tab_1" onclick='setWalls(false)'>Size & Position</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="rm2" class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1"  data-bs-toggle="tab" href="#kt_table_widget_5_tab_2" onclick='setWalls(true)'>Walls</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="rm3" class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1 " data-bs-toggle="tab" href="#kt_table_widget_5_tab_3" onclick='setWalls(false)'>Artworks</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a id="rm4" class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1" data-bs-toggle="tab" href="#kt_table_widget_5_tab_4" onclick='setWalls(false)'> </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!--end::Header-->
-                    <!--begin::Body-->
-                    <div class="card-body py-3 scroll-y" id="artwork_selection">
-                        <div class="tab-content ">
-                            <!--begin::Tap pane-->
-                            <div class="tab-pane fade show active" id="kt_table_widget_5_tab_1">
-                                <div class="row mb-5">
-                                    <!--begin::Col-->
-                                    <div class="col-md-4 fv-row fv-plugins-icon-container" id="x-axis">
-                                        <label for="x-axis" class="fs-5 fw-semibold mb-2">Width</label>
-                                        <input id="x" class="form-control form-control-solid" placeholder="" name="x-axis">
-                                    </div>
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
-                                    <div class="col-md-4 fv-row fv-plugins-icon-container" id="y-axis">
-                                        <label for="y-axis" class="fs-5 fw-semibold mb-2">Height</label>
-                                        <input id="y" class="form-control form-control-solid" placeholder="" name="y-axis">
-                                    </div>
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
-                                    <div class="col-md-4 fv-row fv-plugins-icon-container" id="axis-btn">
-                                        <label class="fs-5 fw-semibold mb-2">&nbsp;</label>
-                                        <a href="#" class="btn btn-primary fw-bold" id="" onclick="handleSizeChange()">Change Size</a>
-                                    </div>
-                                    <!--end::Col-->
-                                </div>
-                                <div class="row mb-5">
-                                </div>
-                                <div class="row mb-5">
-                                    <a href="#" class="btn btn-primary fw-bold col-md-4  unvisible"></a>
-                                    <a href="#" class="btn btn-primary fw-bold col-md-3 " id="" onclick="up()">&#8593;</a>
-                                    <a href="#" class="btn btn-primary fw-bold col-md-5  unvisible"  ></a>
-                                </div>
-                                <div class="row mb-5">
-                                    <a href="#" class="btn btn-primary fw-bold col-md-3 " id="" onclick="left()">&#8592;</a>
-                                    <a href="#" class="btn btn-primary fw-bold col-md-1  unvisible"  ></a>
-                                    <a href="#" class="btn btn-primary fw-bold col-md-3 " id="" onclick="down()">&#8595;</a>
-                                    <a href="#" class="btn btn-primary fw-bold col-md-1  unvisible"  ></a>
-                                    <a href="#" class="btn btn-primary fw-bold col-md-3 " id="" onclick="right()">&#8594;</a>
-                                </div>
-                                <div class="row mb-5 unvisible" id="text_alteration">
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
-                                    <div class="col-md-8 fv-row fv-plugins-icon-container" id="labellabel">
-                                        <label for="label" class="fs-5 fw-semibold mb-2">Text</label>
-                                        <input id="new_label" class="form-control form-control-solid" placeholder="" name="label">
-                                    </div>
-                                    <!--end::Col-->
-                                    <!--begin::Col-->
-                                    <div class="col-md-4 fv-row fv-plugins-icon-container" id="txt-btn">
-                                        <label class="fs-5 fw-semibold mb-2">&nbsp;</label>
-                                        <input type="color" id="html5colorpicker"  value="#ED4969" style="width:10%;">
-                                        <a href="#" class="btn btn-primary fw-bold" id="change_text" onclick="changeText()">Change Text</a>
-                                    </div>
-                                    <!--end::Col-->
-                                </div>
-                                <div class="row mb-5">
-                                    <a href="#" class="btn btn-dark fw-bold col-md-12 " id="" onclick="deleteActiveElement()">Delete Element</a>
-                                </div>
-                            </div>
-                            <!--end::Tap pane-->
-                            <!--begin::Tap pane-->
-                            <div class="tab-pane fade" id="kt_table_widget_5_tab_2">
-                                <div class="mh-375px scroll-y me-n7 pe-7">
-                                </div>
-                            </div>
-                            <!--end::Tap pane-->
-                            <!--begin::Tap pane-->
-                            <div class="tab-pane fade " id="kt_table_widget_5_tab_3">
-
-                            </div>
-                            <!--end::Tap pane-->
-                            <!--begin::Tap pane-->
-                            <div class="tab-pane fade" id="kt_table_widget_5_tab_4">
-
-                            </div>
-                            <!--end::Tap pane-->
-                        </div>
-                    </div>
-                    <!--end::Body-->
-                </div>
-                <!--end::Tables Widget 5-->
+                {% endblock %}
             </div>
+            <div id="control_panel" class="col-sm">
+                <div class="tab-pane fade show active" id="kt_general_widget_1_3">
+                    <!--begin::Tables Widget 5-->
+                    <div class="card">
+                        <!--begin::Header-->
+                        <div class="card-header border-0 pt-5">
+                            <div class="card-toolbar">
+                                <ul class="nav">
+                                    <li class="nav-item">
+                                        <a id="rm1"
+                                            class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1 active"
+                                            data-bs-toggle="tab" href="#kt_table_widget_5_tab_1"
+                                            onclick='setWalls(false)'>Size & Position</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a id="rm2"
+                                            class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1"
+                                            data-bs-toggle="tab" href="#kt_table_widget_5_tab_2"
+                                            onclick='setWalls(true)'>Walls</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a id="rm3"
+                                            class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1 "
+                                            data-bs-toggle="tab" href="#kt_table_widget_5_tab_3"
+                                            onclick='setWalls(false)'>Artworks</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a id="rm4"
+                                            class="nav-link btn btn-sm btn-color-muted btn-active btn-active-secondary fw-bold px-4 me-1"
+                                            data-bs-toggle="tab" href="#kt_table_widget_5_tab_4"
+                                            onclick='setWalls(false)'> Actions </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!--end::Header-->
+                        <!--begin::Body-->
+                        <div class="card-body py-3 scroll-y" id="artwork_selection">
+                            <div class="tab-content ">
+                                <!--begin::Tap pane-->
+                                <div class="tab-pane fade show active" id="kt_table_widget_5_tab_1">
+                                    <div class="row mb-5">
+                                        <!--begin::Col-->
+                                        <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 fv-row fv-plugins-icon-container"
+                                            id="x-axis">
+                                            <label for="x-axis" class="fs-5 fw-semibold mb-2">Width <span
+                                                    class="text-muted">(in centimeters)</span></label>
+                                            <input id="x" class="form-control" placeholder="" name="x-axis">
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 fv-row fv-plugins-icon-container"
+                                            id="y-axis">
+                                            <label for="y-axis" class="fs-5 fw-semibold mb-2">Height <span
+                                                    class="text-muted">(in centimeters)</span></label>
+                                            <input id="y" class="form-control" placeholder="" name="y-axis">
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 fv-row fv-plugins-icon-container"
+                                            id="axis-btn">
+                                            <label class="fs-5 fw-semibold mb-2">&nbsp;</label>
+                                            <br>
+                                            <a href="#" class="btn btn-secondary fw-bold" id=""
+                                                onclick="handleSizeChange()">Change Size</a>
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-xxl-3 col-xl-3 col-lg-6 col-md-6 col-sm-6 col-6 fv-row fv-plugins-icon-container"
+                                            id="scale-btn">
+                                            <label class="fs-5 fw-semibold mb-2">Scale Up or Down</label>
 
+                                            <div class="row">
+                                                <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12">
+                                                    <a href="#" class="btn btn-secondary fw-bold" id="up"
+                                                        onclick="scaleUp()"><svg width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M12.5657 11.3657L16.75 15.55C17.1642 15.9643 17.8358 15.9643 18.25 15.55C18.6642 15.1358 18.6642 14.4643 18.25 14.05L12.7071 8.50716C12.3166 8.11663 11.6834 8.11663 11.2929 8.50715L5.75 14.05C5.33579 14.4643 5.33579 15.1358 5.75 15.55C6.16421 15.9643 6.83579 15.9643 7.25 15.55L11.4343 11.3657C11.7467 11.0533 12.2533 11.0533 12.5657 11.3657Z"
+                                                                fill="currentColor" />
+                                                        </svg>
+
+                                                    </a>
+
+                                                    <a href="#" class="btn btn-secondary fw-bold" id="down"
+                                                        onclick="scaleDown()"><svg width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg">
+                                                            <path
+                                                                d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                                fill="currentColor" />
+                                                        </svg>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--end::Col-->
+
+                                    </div>
+                                    <div class="row mb-5">
+                                    </div>
+                                    <div class="row mb-5">
+                                        <a href="#" class="btn btn-primary fw-bold col-md-4  unvisible"></a>
+                                        <a href="#" class="btn btn-primary fw-bold col-md-3 " id=""
+                                            onclick="up()">&#8593;</a>
+                                        <a href="#" class="btn btn-primary fw-bold col-md-5  unvisible"></a>
+                                    </div>
+                                    <div class="row mb-5">
+                                        <a href="#" class="btn btn-primary fw-bold col-md-3 " id=""
+                                            onclick="left()">&#8592;</a>
+                                        <a href="#" class="btn btn-primary fw-bold col-md-1  unvisible"></a>
+                                        <a href="#" class="btn btn-primary fw-bold col-md-3 " id=""
+                                            onclick="down()">&#8595;</a>
+                                        <a href="#" class="btn btn-primary fw-bold col-md-1  unvisible"></a>
+                                        <a href="#" class="btn btn-primary fw-bold col-md-3 " id=""
+                                            onclick="right()">&#8594;</a>
+                                    </div>
+                                    <div class="row mb-5 unvisible" id="text_alteration">
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-md-8 fv-row fv-plugins-icon-container" id="labellabel">
+                                            <label for="label" class="fs-5 fw-semibold mb-2">Text</label>
+                                            <input id="new_label" class="form-control" placeholder="" name="label">
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-md-4 fv-row fv-plugins-icon-container" id="txt-btn">
+                                            <label class="fs-5 fw-semibold mb-2">&nbsp;</label>
+                                            <br>
+                                            <input type="color" id="html5colorpicker" value="#ED4969">
+                                            <a href="#" class="btn btn-secondary fw-bold" id="change_text"
+                                                onclick="changeText()">Change Text</a>
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                    <div class="row mb-5">
+                                        <a href="#" class="btn btn-dark fw-bold col-md-12 " id=""
+                                            onclick="deleteActiveElement()">Delete Element</a>
+                                    </div>
+                                </div>
+                                <!--end::Tap pane-->
+                                <!--begin::Tap pane-->
+                                <div class="tab-pane fade" id="kt_table_widget_5_tab_2">
+                                    <div class="mh-375px scroll-y me-n7 pe-7">
+                                    </div>
+                                </div>
+                                <!--end::Tap pane-->
+                                <!--begin::Tap pane-->
+                                <div class="tab-pane fade " id="kt_table_widget_5_tab_3">
+                                    <!-- DYNAMIC CONTENT-->
+                                </div>
+                                <!--end::Tap pane-->
+                                <!--begin::Tap pane-->
+                                <div class="tab-pane fade" id="kt_table_widget_5_tab_4">
+                                    <div class="row mb-5">
+                                        <!--begin::Col-->
+                                        <div class="col-md-4 fv-row fv-plugins-icon-container" id="action_click">
+                                            <input type="text" id="plane_msg" class="col-xl-9 form-control"
+                                                placeholder="" name="action_click">
+                                        </div>
+                                        <!--end::Col-->
+                                        <!--begin::Col-->
+                                        <div class="col-md-4 fv-row fv-plugins-icon-container" id="enableClickAction">
+                                            <label class="fs-5 fw-semibold mb-2">&nbsp;</label>
+                                            <a href="#" class="btn btn-primary fw-bold" id="" onclick="addItem()">Add
+                                                Text</a>
+                                        </div>
+                                        <!--end::Col-->
+                                    </div>
+                                </div>
+                                <!--end::Tap pane-->
+                            </div>
+                        </div>
+                        <!--end::Body-->
+                    </div>
+                    <!--end::Tables Widget 5-->
+                </div>
+
+            </div>
         </div>
-    </div>
     </div>
 </div>
 {% endblock %}
 
-
 {% block scripts %}
+<script>
+    const exh_id = '{{exh_id}}';
+</script>
+<script defer src="{% static "/web_app/plugins/custom/fslightbox/fslightbox.bundle.js" %}"></script>
+
 {{ block.super }}
-    <script defer src="{% static "/web_app/plugins/custom/fslightbox/fslightbox.bundle.js" %}"></script>
+
 {% endblock %}

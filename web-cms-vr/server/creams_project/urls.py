@@ -18,10 +18,10 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.urls import path
 
-from web_app import views 
+from web_app import views_functional 
 urlpatterns = [
     url(r'^web_app/', include('web_app.urls')),
-    path('media/images/<str:path>', views.media_access, name='media'),
+    path('media/images/<str:path>', views_functional.media_access, name='media'),
 ]
 
 if settings.DEBUG:

@@ -17,7 +17,7 @@ from django.urls import reverse
 from django.utils.timezone import now
 
 from drf_yasg.utils import swagger_auto_schema
-
+import os
 from rest_framework import (
     parsers,
     permissions,
@@ -43,7 +43,7 @@ from rest_framework.decorators import (
 from rest_framework.permissions import(
     IsAuthenticated,
 )
-
+import stat
 from creams_project.celery import (
     app,
 )
@@ -62,6 +62,7 @@ from .views_utils import (
     sortGeo,
     geoDistance,
     changeExhibitionState,
+    chechRole,
 )
 
 import jwt
@@ -85,6 +86,8 @@ RESOURCE_NAME = "resource_name"
 RESOURCE_OBJ = "resource_obj"
 RESOURCE_ID = "resource_id"
 ARTWORK = "artwork"
+INSTRUCTOR = "INSTRUCTOR"
+STUDENT = "STUDENT"
 
 TASK_STATUS = "task_status"
 
@@ -94,89 +97,13 @@ ERROR_DETAILS = "error_details"
 MISSING_REQUIRED_FIELDS = "missing_required_fields"
 
 
-def index(request):
-	template = loader.get_template('web_app/index.html')
-	context = {
-		'title': "Index title",
-		'header_content': 'Index header content'
-	}
-	return HttpResponse(template.render(context, request))
-
-
-class ArtworkCreate(CreateAPIView):
-    """
-    post:
-    Creates a new artwork instance
-    """
-    authentication_classes = [JWTAuthentication]
-    serializer_class = ArtworkCreateSerializer
-    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
-    permission_classes = (permissions.IsAuthenticated,)
-    response_types = [
-        ['success'],
-        ['unauthorized'],
-        ['bad_request'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error']
-    ]
-    response_dict = build_fields('ArtworkCreate', response_types)
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        security=[{'Bearer': []}, ]
-    )
-    def post(self, request, *args, **kwargs):
-        log.debug("{} Received request".format(request_details(request)))
-        try:
-            response = {}
-            data = {}
-            req_data = request.data
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = ArtworkCreateSerializer(data=req_data)
-
-            if not serialized_item.is_valid():
-                log.debug("{} VALIDATION ERROR: {}".format(
-                        request_details(request),
-                        serialized_item.formatted_error_response()
-                    )
-                )
-                response = {}
-                response[CONTENT] = serialized_item.formatted_error_response(include_already_exists=True)
-                response[STATUS_CODE] = status.HTTP_400_BAD_REQUEST
-                data = response
-            else:
-                with transaction.atomic():
-                    try:
-                        log.debug("{} VALID DATA".format(request_details(request)))
-                        form = ArtWorkForm(request.POST, request.FILES)
-                        form.save()
-                        status_code, message = get_code_and_response(['success'])
-                        content = {}
-                        content[MESSAGE] = message
-                        content[RESOURCE_NAME] = 'artwork'
-                        response = {}
-                        response[CONTENT] = content
-                        response[STATUS_CODE] = status_code
-                        log.debug("{} SUCCESS".format(request_details(request)))
-                        data = response
-                    except ApplicationError as e:
-                        log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                        response = {}
-                        response[CONTENT] = e.get_response_body()
-                        response[STATUS_CODE] = e.status_code
-                        data = response
-
-        except Exception as e:
-            log.error("{} Internal error: {}".format(request_details(request), str(e)))
-            status_code, _ = get_code_and_response(['internal_server_error'])
-            content = {
-                MESSAGE: "Failed to create artwork."
-            }
-            return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
+#def index(request):
+#	template = loader.get_template('web_app/index.html')
+#	context = {
+#		'title': "Index title",
+#		'header_content': 'Index header content'
+#	}
+#	return HttpResponse(template.render(context, request))
 
 
 class SampleAuthenticated(GenericAPIView):
@@ -265,571 +192,14 @@ class SampleAuthenticated(GenericAPIView):
         return Response(data[CONTENT], status=data[STATUS_CODE])
 
 
-def visitor_dashboard(request):
-
-    template = loader.get_template('web_app/visitor/landingpage.html')
-    context = {
-		'title': "Visitor Dashboard",
-		'header_content': 'Index header content',
-	}   
-        
-    return HttpResponse(template.render(context, request))
-
-
 def submit_artwork(request):
-	template = loader.get_template('web_app/submit_artwork.html')
+	template = loader.get_template('web_app/student/submit_artwork.html')
 	context = {
 		'title': "Submit an artwork",
 		'header_content': 'Index header content'
 	}
 	return HttpResponse(template.render(context, request))
 
-
-def insertArtwork(request):
-    form = ArtWorkForm()
-    if request.method == 'POST':
-        form = ArtWorkForm(request.POST,request.FILES)
-        if form.is_valid():  
-            form.save()  
-        else:
-            print("ERROR")
-            print("========================================")
-#
-    return render(request, 'web_app/teacher/student_selection.html', {'form': form , 'id' : 2}) 
-
-
-def submit_outdoor_artwork_to_exhibition_page(request):
-    template = loader.get_template('web_app/submit_outdoor_artwork.html')
-    context = {
-		'title': "Add artwork to an outdoor exhibition",
-		'header_content': 'Index header content'
-	}
-    
-    return HttpResponse(template.render(context, request))
-
-
-def outdoor_artwork_submit(request):
-    form = OutdoorArtWorkForm()
-    print("insert ME")
-    print(request.POST)
-    if request.method == 'POST':
-        form = OutdoorArtWorkForm(request.POST)  
-        if form.is_valid():  
-            form.save()  
-        else:
-            print("ERROR")
-
-    return render(request, 'web_app/teacher/student_selection.html', {'form': form , 'id' : 2})   
-
-
-class getStudentsArtworks(RetrieveAPIView):
-    """
-    get: Get data of an artwork based on its id.
-    """
-    authentication_classes = [JWTAuthentication]
-    serializer_class = UserSerializer
-    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
-    #permission_classes = (permissions.IsAuthenticated,)
-    response_types = [
-        ['success'],
-        ['bad_request'],
-        ['unauthorized'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error'],
-        ['resource_not_found', 'artwork'], 
-    ]
-    
-    response_dict = build_fields('getStudentsArtworks', response_types)
-    
-    #parameters = openapi.Parameter(
-        #'student-id',
-        #in_=openapi.IN_QUERY,
-        #description='The id of the artwork you want to fetch',
-        #type=openapi.TYPE_INTEGER,
-        #required=True,
-    #)
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        #security=[{'Bearer': []}, ],
-        #manual_parameters=[parameters]
-    )
-
-    def get(self, request):
-        '''
-        Get data of an artwork based on its id.
-        '''
-        
-        try:
-            response = {}
-            data = {}
-            req_data = request.GET
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = UserSerializer(data=req_data)
-
-            flag,stu,decoded = at.authenticateStudent(request,settings)
-            if(flag == False  or stu == False):
-                log.error("{} Internal error: {}".format(request_details(request), decoded))
-                status_code, _ = get_code_and_response(['unauthorized'])
-                content = {
-                    MESSAGE: "Access token is invalid."
-                }
-                return Response(content, status=status_code)
-                
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                st_id = req_data.get('student-id')
-                art_list = Artwork.objects.filter(user_fk_id=decoded['user_id']).values()
-                if not art_list:
-                    raise ApplicationError(['resource_not_found', 'artwork_list'])
-                status_code, message = get_code_and_response(['success'])
-                content = {}
-                content[MESSAGE] = message
-                header_data = {}
-                header_data["artworks"] = []
-                for i in art_list:
-                    data = {}
-                    data["id"]          = i['id']
-                    data["src"]         = i['src']
-                    data["year"]        = i['year']
-                    data["name"]        = i['name']
-                    data["height"]      = i['height']
-                    data["width"]       = i['width']
-                    data["unit"]        = i['unit']
-                    data["depth"]       = i['depth']
-                    data["technique"]   = i['technique']
-                    data["genre"]       = i['genre']
-                    data["art_type"]    = i['art_type']
-                    header_data["artworks"].append(data)
-                content[RESOURCE_OBJ] = header_data     
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
-
-            
-        except Exception as e:
-            log.error("{} Internal error: {}".format(request_details(request), str(e)))
-            status_code, _ = get_code_and_response(['internal_server_error'])
-            content = {
-                MESSAGE: "Failed to fetch artwork."
-            }
-            return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
-     
-        
-class getArtwork(RetrieveAPIView):
-    """
-    get: Get data of an artwork based on its id.
-    """
-    serializer_class = ArtworkSerializer
-    permission_classes = (permissions.AllowAny,)
-    response_types = [
-        ['success'],
-        ['bad_request'],
-        #['unauthorized'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error'],
-        ['resource_not_found', 'artwork'], 
-    ]
-    
-    response_dict = build_fields('getArtwork', response_types)
-    
-    parameters = openapi.Parameter(
-        'artwork-id',
-        in_=openapi.IN_QUERY,
-        description='The id of the artwork you want to fetch',
-        type=openapi.TYPE_INTEGER,
-        required=True,
-    )
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        security=[],
-        manual_parameters=[parameters]
-    )
-
-    def get(self, request):
-        '''
-        Get data of an artwork based on its id.
-        '''
-        
-        try:
-            response = {}
-            data = {}
-            req_data = request.GET
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = ArtworkSerializer(data=req_data)
-            
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                art_id = req_data.get('artwork-id')
-                demo = Artwork.objects.filter(id=art_id).values()
-                
-                if not demo:
-                    raise ApplicationError(['resource_not_found', 'artwork'])
-                
-                status_code, message = get_code_and_response(['success'])
-                content = {}
-                content[MESSAGE] = message
-                
-                artwork = demo[0]
-                data = {}
-                data["id"] = artwork['id']
-                data["owner"] = artwork['user_fk_id']
-                data["name"] = artwork['name']
-                data["src"] = artwork['src']
-                data["year"] = artwork['year']
-                data["height"] = artwork['height']
-                data["width"] = artwork['width']
-                data["unit"] = artwork['unit']
-                data["depth"] = artwork['depth']
-                data["technique"] = artwork['technique']
-                data["genre"] = artwork['genre']
-                data["art_type"] = artwork['art_type']
-                
-                content[RESOURCE_OBJ] = data
-                
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
-                
-            
-        except Exception as e:
-            log.error("{} Internal error: {}".format(request_details(request), str(e)))
-            status_code, _ = get_code_and_response(['internal_server_error'])
-            content = {
-                MESSAGE: "Failed to fetch artwork."
-            }
-            return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
-  
-    
-class getVRTemplate(RetrieveAPIView):
-    """
-    get: Get data of an artwork based on its id.
-    """
-    serializer_class = VR_TemplateSerializer
-    permission_classes = (permissions.AllowAny,)
-    response_types = [
-        ['success'],
-        ['bad_request'],
-        #['unauthorized'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error'],
-        ['resource_not_found', 'artwork'], 
-    ]
-    
-    response_dict = build_fields('getVRTemplate', response_types)
-    
-    parameters = openapi.Parameter(
-        'template-id',
-        in_=openapi.IN_QUERY,
-        description='The id of the vr template you want to fetch',
-        type=openapi.TYPE_INTEGER,
-        required=True,
-    )
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        security=[],
-        manual_parameters=[parameters]
-    )
-
-    def get(self, request):
-        '''
-        Get data of a vr template based on its id.
-        '''
-        
-        try:
-            response = {}
-            data = {}
-            req_data = request.GET
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = VR_TemplateSerializer(data=req_data)
-            
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                temp_id = req_data.get('template-id')
-                demo = VR_Templates.objects.filter(id=temp_id).values()
-                
-                if not demo:
-                    raise ApplicationError(['resource_not_found', 'vr_template'])
-                
-                status_code, message = get_code_and_response(['success'])
-                content = {}
-                content[MESSAGE] = message
-                
-                temp = demo[0]
-                data = {}
-                data["id"] = temp['id']
-                data["basis"] = temp['basis']
-                data["name"] = temp['name']
-                data["rooms"] = temp['rooms']
-                
-                content[RESOURCE_OBJ] = data
-                
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
-                
-            
-        except Exception as e:
-            log.error("{} Internal error: {}".format(request_details(request), str(e)))
-            status_code, _ = get_code_and_response(['internal_server_error'])
-            content = {
-                MESSAGE: "Failed to fetch vr template."
-            }
-            return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
- 
-        
-class getOutdoorExhibition(RetrieveAPIView):
-    """
-    get: Get data of an outdoor exhibition based on its id.
-    """
-    serializer_class = OutdoorExhibitionSerializer
-    permission_classes = (permissions.AllowAny,)
-    response_types = [
-        ['success'],
-        ['bad_request'],
-        #['unauthorized'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error'],
-        ['resource_not_found', 'outdoor_exhibition'], 
-    ]
-    
-    response_dict = build_fields('getOutdoorExhibition', response_types)
-    
-    parameters = openapi.Parameter(
-        'outdoor-exhibition-id',
-        in_=openapi.IN_QUERY,
-        description='The id of the outdoor exhibition you want to fetch',
-        type=openapi.TYPE_INTEGER,
-        required=True,
-    )
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        security=[],
-        manual_parameters=[parameters]
-    )
-    def get(self, request, *args, **kwargs):
-        '''
-        Get data of an outdoor exhibition based on its id.
-        '''
-        
-        try:
-            response = {}
-            data = {}
-            req_data = request.GET
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = OutdoorExhibitionSerializer(data=req_data)
-        
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                exh_id = req_data.get('outdoor-exhibition-id')
-                demo = OutdoorExhibition.objects.filter(id=exh_id).values()
-            
-                if not demo:
-                    raise ApplicationError(['resource_not_found', 'outdoor_exhibition'])
-            
-                arts = OutdoorArtwork.objects.filter(exhibition_fk=exh_id).values()
-            
-                if not arts:
-                    raise ApplicationError(['resource_not_found', 'outdoor exhibition artwork'])
-            
-         
-                status_code, message = get_code_and_response(['success'])
-                content = {}
-                content[MESSAGE] = message
-            
-                exhibition = demo[0]
-                header_data = {}
-                header_data["id"] = exhibition['id']
-                header_data["owner"] = exhibition['user_fk_id']
-                header_data["start_date"] = exhibition['start_date']
-                header_data["end_date"] = exhibition['end_date']
-                header_data["description"] = exhibition['description']
-                header_data["artworks"] = []
-                for i in arts:
-                    data = {}
-                    data["lat"] = i['lat']
-                    data["lon"] = i['lon']
-                    demo2 = Artwork.objects.filter(id=i['artwork_fk_id']).values()
-                    data["id"] = demo2[0]['id']
-                    data["owner"] = demo2[0]['user_fk_id']
-                    data["src"] = demo2[0]['src']
-                    data["year"] = demo2[0]['year']
-                    data["name"] = demo2[0]['name']
-                    data["height"] = demo2[0]['height']
-                    data["width"] = demo2[0]['width']
-                    data["unit"] = demo2[0]['unit']
-                    data["depth"] = demo2[0]['depth']
-                    data["technique"] = demo2[0]['technique']
-                    data["genre"] = demo2[0]['genre']
-                    data["art_type"] = demo2[0]['art_type']
-            
-                    if not demo2:
-                        raise ApplicationError(['resource_not_found', 'artwork'])
-                    header_data["artworks"].append(data)
-                
-                content[RESOURCE_OBJ] = header_data
-             
-            
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
-            
-        
-        except Exception as e:
-           log.error("{} Internal error: {}".format(request_details(request), str(e)))
-           status_code, _ = get_code_and_response(['internal_server_error'])
-           content = {
-               MESSAGE: "Failed to fetch outdoor exhibition."
-           }
-           return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
- 
-    
-def create_outdoor(request):
-    access_tkn = request.COOKIES.get('access_tkn')
-    refresh_tkn = request.COOKIES.get('refresh_tkn')
-    if not access_tkn:
-        url = reverse('login')
-        return HttpResponseRedirect(url)
-    
-    #access_tkn = "asd"
-    try:
-        decoded = jwt.decode(access_tkn, verify=False)
-    except Exception as e:
-        url = reverse('login')
-        return HttpResponseRedirect(url)
-    template = loader.get_template('web_app/create_outdoor.html')
-    context = {
-		'title': "Add artwork to an outdoor exhibition",
-		'header_content': 'Index header content',
-          'userID': decoded['user_id'],
-        'email': decoded['sub'],
-        'name': decoded['name'],
-        'surname': decoded['surname'],
-        'organization': decoded['organization'],
-        'role': decoded['role']
-	}
-    
-    return HttpResponse(template.render(context, request))
-
-
-def login_screen(request):
-    template = loader.get_template('web_app/sign-in.html')
-    context = {
-		'title': "Add artwork to an outdoor exhibition",
-		'header_content': 'Index header content'
-	}
-    
-    return HttpResponse(template.render(context, request))
-
-
-def signup_screen(request):
-    template = loader.get_template('web_app/sign-up.html')
-    context = {
-		'title': "Add artwork to an outdoor exhibition",
-		'header_content': 'Index header content',
-        'organizations' : [oc[0] for oc in OrganizationModel.ORGANIZATION_CHOICES],
-        'roles' : [r[0] for r in RoleModel.ROLE_CHOICES],
-        'student_choices' : [r[0] for r in ClassAndLevelModel.STUDENT_CHOICES],
-        'teacher_choices' : [r[0] for r in ClassAndLevelModel.TEACHER_CHOICES],
-
-	}
-
-    return HttpResponse(template.render(context, request))
-
-
-def verifyAccount(request):
-    template = loader.get_template('web_app/verifyemail.html')
-    context = {
-		'title': "Add artwork to an outdoor exhibition",
-		'header_content': 'Index header content',
-        'email': 'mbofos01@ucy.ac.cy'
-
-	}
-
-    return HttpResponse(template.render(context, request))
-
-
-def vr_exhibition_demo(request):
-    template = loader.get_template('web_app/vr-exhibitions/picasso/picasso.html')
-    context = {
-		'title': "Add artwork to an outdoor exhibition",
-		'header_content': 'Index header content'
-	}
-    
-    return HttpResponse(template.render(context, request))
-
-
-def outdoor_exhibition_submit(request):
-    form = OutdoorExhibitionForm()
-    print(request.POST)
-    if request.method == 'POST':
-        form = OutdoorExhibitionForm(request.POST)  
-        if form.is_valid():  
-            form.save()  
-        else:
-            print("ERROR")
-
-
-    return render(request, 'web_app/teacher/student_selection.html', {'form': form , 'id' : 2})   
 
 
 def editor_prototype(request):
@@ -840,17 +210,6 @@ def editor_prototype(request):
 		'title1': "Teacher Dashboard",
 		'header_content': 'Index header content',
         'basis': temp
-	}   
-
-    
-    return HttpResponse(template.render(context, request)) 
-
-
-def display403(request):
-    template = loader.get_template('web_app/errors/403.html')
-    context = {
-		'title': "Student Selection",
-		'header_content': 'Index header content',
 	}   
 
     
@@ -882,8 +241,6 @@ def student_dashboard(request):
         'surname': decoded['surname'],
         'organization': decoded['organization'],
         'role': decoded['role'],
-        'exh_num': 3,
-        'art_num': 5
 	}   
 
     return HttpResponse(template.render(context, request))
@@ -967,8 +324,30 @@ def createAr(request):
     
     if( stu == False):
         return HttpResponseRedirect('/web_app/teacher/dashboard/')
-        
+    
+    assigned_id = request.GET.get('assign')
+    cross = AssignedExhibitionStudents.objects.filter(assignment_fk_id =assigned_id ,student_fk_id =decoded['user_id']).values()
+    print(cross)
+    if not cross:
+        return HttpResponseRedirect('/web_app/student/dashboard/')
+    
     template = loader.get_template('web_app/ar-exhibitions/createAR.html')
+    exh = Exhibition.objects.filter(id=assigned_id).values()[0]
+    if not exh:
+        return HttpResponseRedirect('/web_app/student/dashboard/')
+    inst = Users.objects.filter(id=exh['instructor_fk_id']).values()[0]
+    full_name = inst["name"] + " " + inst["surname"]
+    titleExh = exh['exhibition_title']
+    outdoor = OutdoorExhibition.objects.filter(exhibition_fk_id = exh['id'], user_fk_id =decoded['user_id']).values()
+    if not outdoor:
+        inModel = OutdoorExhibition(
+        user_fk_id = decoded['user_id'],
+        exhibition_fk_id = assigned_id)
+
+        inModel.save()
+        outdoor = OutdoorExhibition.objects.filter(exhibition_fk_id = exh['id'], user_fk_id =decoded['user_id']).values()
+        
+    outdoor = outdoor[0]
     context = {
 		'title': "Create AR Exhibition",
 		'header_content': 'Index header content',
@@ -978,515 +357,15 @@ def createAr(request):
         'surname': decoded['surname'],
         'organization': decoded['organization'],
         'role': decoded['role'],
-        'exh_title': 'Autumn',
-        'teacher': 'Bob Ross'
+        'exh_title': titleExh,
+        'teacher': full_name,
+        'exh_id': outdoor['id']
 	}   
 
     return HttpResponse(template.render(context, request))
 
-
-def ar_display(request):
-    template = loader.get_template('web_app/visitor/ar_display.html')
-    context = {
-		'title': "View AR Exhibition",
-		'header_content': 'Index header content',
-        'exh_title': 'Picasso Downtown',
-        'teacher': 'Michalis Papadopoulos'
-	}   
-
-    return HttpResponse(template.render(context, request))
-
-
-def logout(request):
-    access_tkn = request.COOKIES.get('access_tkn')
-    refresh_tkn = request.COOKIES.get('refresh_tkn')
-    if not access_tkn:
-        url = reverse('login')
-        return HttpResponseRedirect(url)
-    
-    tkn_okay,decoded = at.authenticate(request,settings)
-    if( tkn_okay == False):
-        url = reverse('login')
-        return HttpResponseRedirect(url)
-    
-    response = HttpResponseRedirect('/web_app/login/')
-    response.delete_cookie('access_tkn')
-    response.delete_cookie('refresh_tkn')
-    return response
-
-
-class getAllOutdoorExhibitions(RetrieveAPIView):
-    """
-    get: Get data of all outdoor exhibitions.
-    """
-    serializer_class = OutdoorExhibitionSerializer
-    permission_classes = (permissions.AllowAny,)
-    response_types = [
-        ['success'],
-        ['bad_request'],
-        #['unauthorized'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error'],
-        ['resource_not_found', 'outdoor_exhibition'], 
-    ]
-    
-    response_dict = build_fields('getAllOutdoorExhibitions', response_types)
-    
-    @swagger_auto_schema(
-        responses=response_dict,
-        security=[],
-    )
-    def get(self, request, *args, **kwargs):
-        '''
-        Get data of all outdoor exhibitions based.
-        '''
-        
-        try:
-            response = {}
-            data = {}
-            req_data = request.GET
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = OutdoorExhibitionSerializer(data=req_data)
-        
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                demo = OutdoorExhibition.objects.values()
-
-                if not demo:
-                    raise ApplicationError(['resource_not_found', 'outdoor_exhibition'])
-            
-                status_code, message = get_code_and_response(['success'])
-                content = {}
-                content[MESSAGE] = message
-            
-                header_data = {}
-                header_data["exhibitions"] = []
-                for outdoor in demo:
-                    temp = {}
-                    temp["id"] = outdoor['id']
-                    temp["owner"] = outdoor['user_fk_id']
-                    temp["start_date"] = outdoor['start_date']
-                    temp["end_date"] = outdoor['end_date']
-                    temp["description"] = outdoor['description']
-                    temp["artworks"] = []
-                    arts = OutdoorArtwork.objects.filter(exhibition_fk=outdoor['id']).values()
-                    if not arts:
-                        raise ApplicationError(['resource_not_found', 'outdoor exhibition artwork'])
-                    for i in arts:
-                        data = {}
-                        data["lat"] = i['lat']
-                        data["lon"] = i['lon']
-                        demo2 = Artwork.objects.filter(id=i['artwork_fk_id']).values()
-                        data["id"] = demo2[0]['id']
-                        data["owner"] = demo2[0]['user_fk_id']
-                        data["src"] = demo2[0]['src']
-                        data["year"] = demo2[0]['year']
-                        data["name"] = demo2[0]['name']
-                        data["height"] = demo2[0]['height']
-                        data["width"] = demo2[0]['width']
-                        data["unit"] = demo2[0]['unit']
-                        data["depth"] = demo2[0]['depth']
-                        data["technique"] = demo2[0]['technique']
-                        data["genre"] = demo2[0]['genre']
-                        data["art_type"] = demo2[0]['art_type']
-            
-                        if not demo2:
-                            raise ApplicationError(['resource_not_found', 'artwork'])
-                        temp["artworks"].append(data)
-                    header_data["exhibitions"].append(temp)
-                        
-                content[RESOURCE_OBJ] = header_data
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
-            
-        
-        except Exception as e:
-           log.error("{} Internal error: {}".format(request_details(request), str(e)))
-           status_code, _ = get_code_and_response(['internal_server_error'])
-           content = {
-               MESSAGE: "Failed to fetch outdoor exhibition."
-           }
-           return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
-    
-    
-class getAllOutdoorExhibitionsSorted(RetrieveAPIView):
-    """
-    get: Get data of all outdoor exhibitions sorted based on a latitude and longitude.
-    """
-    serializer_class = OutdoorExhibitionSerializer
-    permission_classes = (permissions.AllowAny,)
-    response_types = [
-        ['success'],
-        ['bad_request'],
-        #['unauthorized'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error'],
-        ['resource_not_found', 'outdoor_exhibition'], 
-    ]
-    
-    response_dict = build_fields('getAllOutdoorExhibitions', response_types)
-    
-    parameters = [openapi.Parameter(
-        'lat',
-        in_=openapi.IN_QUERY,
-        description='The latitude of your position',
-        type=openapi.TYPE_NUMBER,
-        required=True,
-    ),openapi.Parameter(
-        'lon',
-        in_=openapi.IN_QUERY,
-        description='The longitude of your position',
-        type=openapi.TYPE_NUMBER,
-        required=True,
-    )]
-                  
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        security=[],
-        manual_parameters=parameters
-    )
-    
-    def get(self, request, *args, **kwargs):
-        '''
-        Get data of all outdoor exhibitions based.
-        '''
-        try:
-            response = {}
-            data = {}
-            req_data = request.GET
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = OutdoorExhibitionSerializer(data=req_data)
-            lat = req_data.get('lat')
-            lon = req_data.get('lon')
-        
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                demo = OutdoorExhibition.objects.values()
-                
-                if not demo:
-                    raise ApplicationError(['resource_not_found', 'outdoor_exhibition'])
-            
-                status_code, message = get_code_and_response(['success'])
-                content = {}
-                content[MESSAGE] = message
-            
-                header_data = {}
-                header_data["exhibitions"] = []
-                nearest_of_exhibition = {}
-                cnt = 0
-                for outdoor in demo:
-                    arts = OutdoorArtwork.objects.filter(exhibition_fk=outdoor['id']).values()
-                    if not arts:
-                        raise ApplicationError(['resource_not_found', 'outdoor exhibition artwork'])
-                    arts = sortGeo(arts,lat, lon)
-                    nearest_of_exhibition[cnt] = [arts[0]['lat'],arts[0]['lon']]
-                    cnt = cnt + 1 
-
-                
-                tmp_list = []
-                for k, v in nearest_of_exhibition.items():      
-                    temp_ins = []
-                    temp_ins.append(v)
-                    temp_ins.append(k)
-                    tmp_list.append(temp_ins)                    
-                
-                nearest_of_exhibition = sorted(tmp_list, key=lambda x: geoDistance(lat,lon,x[0][0],x[0][1]))
-
-                for point in nearest_of_exhibition:
-                    pointer = point[1]
-                    outdoor = demo[pointer]
-                    temp = {}
-                    temp["id"] = outdoor['id']
-                    temp["owner"] = outdoor['user_fk_id']
-                    temp["start_date"] = outdoor['start_date']
-                    temp["end_date"] = outdoor['end_date']
-                    temp["description"] = outdoor['description']
-                    temp["artworks"] = []
-                    arts = OutdoorArtwork.objects.filter(exhibition_fk=outdoor['id']).values()
-                    if not arts:
-                        raise ApplicationError(['resource_not_found', 'outdoor exhibition artwork'])
-                   
-                    for i in arts:
-                        data = {}
-                        data["lat"] = i['lat']
-                        data["lon"] = i['lon']
-                        demo2 = Artwork.objects.filter(id=i['artwork_fk_id']).values()
-                        data["id"] = demo2[0]['id']
-                        data["owner"] = demo2[0]['user_fk_id']
-                        data["src"] = demo2[0]['src']
-                        data["year"] = demo2[0]['year']
-                        data["name"] = demo2[0]['name']
-                        data["height"] = demo2[0]['height']
-                        data["width"] = demo2[0]['width']
-                        data["unit"] = demo2[0]['unit']
-                        data["depth"] = demo2[0]['depth']
-                        data["technique"] = demo2[0]['technique']
-                        data["genre"] = demo2[0]['genre']
-                        data["art_type"] = demo2[0]['art_type']
-            
-                        if not demo2:
-                            raise ApplicationError(['resource_not_found', 'artwork'])
-                        temp["artworks"].append(data)
-                    header_data["exhibitions"].append(temp)
-                    
-
-                content[RESOURCE_OBJ] = header_data
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
-            
-        
-        except Exception as e:
-           log.error("{} Internal error: {}".format(request_details(request), str(e)))
-           status_code, _ = get_code_and_response(['internal_server_error'])
-           content = {
-               MESSAGE: "Failed to fetch outdoor exhibition."
-           }
-           return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
   
-    
-
-
-class getAllOutdoorArtworksSorted(RetrieveAPIView):
-    """
-    get: Get data of all outdoor artworks sorted based on a latitude and longitude.
-    """
-    serializer_class = OutdoorExhibitionSerializer
-    permission_classes = (permissions.AllowAny,)
-    response_types = [
-        ['success'],
-        ['bad_request'],
-        #['unauthorized'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error'],
-        ['resource_not_found', 'outdoor_exhibition'], 
-    ]
-    
-    response_dict = build_fields('getAllOutdoorExhibitions', response_types)
-    
-    parameters = [openapi.Parameter(
-        'lat',
-        in_=openapi.IN_QUERY,
-        description='The latitude of your position',
-        type=openapi.TYPE_NUMBER,
-        required=True,
-    ),openapi.Parameter(
-        'lon',
-        in_=openapi.IN_QUERY,
-        description='The longitude of your position',
-        type=openapi.TYPE_NUMBER,
-        required=True,
-    )]
-                  
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        security=[],
-        manual_parameters=parameters
-    )
-    
-    def get(self, request):
-        '''
-        Get data of all outdoor artworks sorted based on a latitude and longitude. 
-        '''
-        #req_data = request.GET
-        #lat = req_data.get('lat')
-        #lon = req_data.get('lon')
-        #art_list = OutdoorArtwork.objects.values()
-        #art_list = sortGeo(art_list,lat,lon)
-        
-        try:
-            response = {}
-            data = {}
-            req_data = request.GET
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = UserSerializer(data=req_data)
-            lat = req_data.get('lat')
-            lon = req_data.get('lon')
-
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                art_list = OutdoorArtwork.objects.values()
-                
-                if not art_list:
-                    raise ApplicationError(['resource_not_found', 'artwork_list'])
-                
-                status_code, message = get_code_and_response(['success'])
-                
-                content = {}
-                content[MESSAGE] = message
-                header_data = {}
-                header_data["artworks"] = []
-                art_list = sortGeo(art_list,lat,lon)
-                for a in art_list:
-                    i = Artwork.objects.filter(id=a['artwork_fk_id']).values()[0]
-                    data = {}
-                    data["id"]          = a['id']
-                    data["lat"]         = a['lat']
-                    data["lon"]         = a['lon']
-                    data["src"]         = i['src']
-                    data["year"]        = i['year']
-                    data["name"]        = i['name']
-                    data["height"]      = i['height']
-                    data["width"]       = i['width']
-                    data["unit"]        = i['unit']
-                    data["depth"]       = i['depth']
-                    data["technique"]   = i['technique']
-                    data["genre"]       = i['genre']
-                    data["art_type"]    = i['art_type']
-                    header_data["artworks"].append(data)
-                    
-                content[RESOURCE_OBJ] = header_data     
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
-
-            
-        except Exception as e:
-            log.error("{} Internal error: {}".format(request_details(request), str(e)))
-            status_code, _ = get_code_and_response(['internal_server_error'])
-            content = {
-                MESSAGE: "Failed to fetch artworks."
-            }
-            return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
-  
-    
-class submitOutdoorArtwork(CreateAPIView):
-    """
-    post:
-    Assigns an artwork to an outdoor exhibition
-    """
-    authentication_classes = [JWTAuthentication]
-    serializer_class = OutdoorArtworkSerializer
-    parser_classes = (parsers.FormParser, parsers.MultiPartParser)
-    #permission_classes = (permissions.IsAuthenticated,)
-    response_types = [
-        ['success'],
-        ['unauthorized'],
-        ['bad_request'],
-        ['method_not_allowed'],
-        ['unsupported_media_type'],
-        ['internal_server_error']
-    ]
-    response_dict = build_fields('submitOutdoorArtwork', response_types)
-
-    @swagger_auto_schema(
-        responses=response_dict,
-        #security=[{'Bearer': []}, ]
-    )
-    def post(self, request, *args, **kwargs):
-        log.debug("{} Received request".format(request_details(request)))
-        
-        try:
-            decoded = jwt.decode(
-            request.COOKIES['access_tkn'],
-            settings.SIMPLE_JWT['SIGNING_KEY'],
-            settings.SIMPLE_JWT['ALGORITHM'],
-            audience=settings.SIMPLE_JWT['AUDIENCE'])
-            print(decoded)
-                
-        except Exception as e:
-                log.error("{} Internal error: {}".format(request_details(request), str(e)))
-                status_code, _ = get_code_and_response(['unauthorized'])
-                content = {
-                    MESSAGE: "Access token is invalid."
-                }
-                return Response(content, status=status_code)
-        try:
-            response = {}
-            data = {}
-            req_data = request.data
-            serialized_request = serialize_request(request)
-            log.debug("{} START".format(request_details(request)))
-            serialized_item = OutdoorArtworkSerializer(data=req_data)
-
-            if not serialized_item.is_valid():
-                log.debug("{} VALIDATION ERROR: {}".format(
-                        request_details(request),
-                        serialized_item.formatted_error_response()
-                    )
-                )
-                response = {}
-                response[CONTENT] = serialized_item.formatted_error_response(include_already_exists=True)
-                response[STATUS_CODE] = status.HTTP_400_BAD_REQUEST
-                data = response
-            else:
-                with transaction.atomic():
-                    try:
-                        log.debug("{} VALID DATA".format(request_details(request)))
-                        form = OutdoorArtWorkForm(request.POST)
-                        form.save()
-                        status_code, message = get_code_and_response(['success'])
-                        content = {}
-                        content[MESSAGE] = message
-                        content[RESOURCE_NAME] = 'outdoor artwork'
-                        response = {}
-                        response[CONTENT] = content
-                        response[STATUS_CODE] = status_code
-                        log.debug("{} SUCCESS".format(request_details(request)))
-                        data = response
-                    except ApplicationError as e:
-                        log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                        response = {}
-                        response[CONTENT] = e.get_response_body()
-                        response[STATUS_CODE] = e.status_code
-                        data = response
-
-        except Exception as e:
-            log.error("{} Internal error: {}".format(request_details(request), str(e)))
-            status_code, _ = get_code_and_response(['internal_server_error'])
-            content = {
-                MESSAGE: "Failed to assign artwork."
-            }
-            return Response(content, status=status_code)
-
-        return Response(data[CONTENT], status=data[STATUS_CODE])
-
-    
+#Checked on status_codes   
 class ExhibitionCreate(CreateAPIView):
     """
     post:
@@ -1588,6 +467,7 @@ class ExhibitionCreate(CreateAPIView):
         return Response(data[CONTENT], status=data[STATUS_CODE])
 
 
+#Checked on status_codes
 class AssignExhibition(CreateAPIView):
     """
     post:
@@ -1657,6 +537,9 @@ class AssignExhibition(CreateAPIView):
                     try:
                         log.debug("{} VALID DATA".format(request_details(request)))
                         student = req_data.get('student_fk')
+                        if(chechRole(student,STUDENT) == False):
+                            print("NOT A STUDENT")
+                            raise Exception
                         exhibition = req_data.get('assignment_fk')
                         assign = AssignedExhibitionStudents(
                             student_fk_id=student,
@@ -1692,6 +575,114 @@ class AssignExhibition(CreateAPIView):
         return Response(data[CONTENT], status=data[STATUS_CODE])
 
 
+#Checked on status_codes
+class AssignAdvisory(CreateAPIView):
+    """
+    post:
+    Creates an exhibition advisory to an instructor
+    """
+    authentication_classes = [JWTAuthentication]
+    serializer_class = AssignAdvisorSerializer
+    permission_classes = (permissions.AllowAny,)
+    response_types = [
+        ['success'],
+        ['unauthorized'],
+        ['bad_request'],
+        ['method_not_allowed'],
+        ['unsupported_media_type'],
+        ['internal_server_error']
+    ]
+    response_dict = build_fields('AssignAdvisory', response_types)
+    
+    @swagger_auto_schema(
+        responses=response_dict,
+
+    )
+    def post(self, request, *args, **kwargs):
+        log.debug("{} Received request".format(request_details(request)))
+
+        try:
+                    
+            access_tkn = request.COOKIES.get('access_tkn')
+            refresh_tkn = request.COOKIES.get('refresh_tkn')
+            if not access_tkn:
+                raise Exception("No access token provided!")
+
+            tkn_okay, instr, decoded = at.authenticateInstructor(request,settings)
+            if( tkn_okay == False):
+                raise Exception("Access token invalid!")
+
+            if( instr == False):
+                raise Exception("User account unauthorized!")
+            
+        except Exception as e:
+                log.error("{} Internal error: {}".format(request_details(request), str(e)))
+                status_code, _ = get_code_and_response(['unauthorized'])
+                content = {
+                    MESSAGE: "Access token is invalid."
+                }
+                return Response(content, status=status_code)
+        try:
+            response = {}
+            data = {}
+            req_data = request.data
+            serialized_request = serialize_request(request)
+            log.debug("{} START".format(request_details(request)))
+            serialized_item = AssignAdvisorSerializer(data=req_data)
+            
+            if not serialized_item.is_valid():
+                log.debug("{} VALIDATION ERROR: {}".format(
+                        request_details(request),
+                        serialized_item.formatted_error_response()
+                    )
+                )
+                response = {}
+                response[CONTENT] = serialized_item.formatted_error_response(include_already_exists=True)
+                response[STATUS_CODE] = status.HTTP_400_BAD_REQUEST
+                data = response
+            else:
+                with transaction.atomic():
+                    try:
+                        log.debug("{} VALID DATA".format(request_details(request)))
+                        instructor = req_data.get('instructor_fk')
+                        if(chechRole(instructor,INSTRUCTOR) == False):
+                            print("NOT AN INSTRUCTOR")
+                            raise Exception
+                        exhibition = req_data.get('assignment_fk')
+                        assign = AssignedExhibitionInstructor(
+                            instructor_fk_id=instructor,
+                            assignment_fk_id=exhibition,
+                        )
+                        assign.save()
+                        status_code, message = get_code_and_response(['success'])
+                        content = {}
+                        content[MESSAGE] = message
+                        content[RESOURCE_NAME] = 'exhibition advisory assignment'
+                        response = {}
+                        response[CONTENT] = content
+                        response[STATUS_CODE] = status_code
+                        log.debug("{} SUCCESS".format(request_details(request)))
+                        data = response
+                    except ApplicationError as e:
+                        log.info("{} ERROR: {}".format(request_details(request), str(e)))
+                        response = {}
+                        response[CONTENT] = e.get_response_body()
+                        response[STATUS_CODE] = e.status_code
+                        data = response
+                   
+
+        except Exception as e:
+            log.error("{} Internal error: {}".format(request_details(request), str(e)))
+            status_code, _ = get_code_and_response(['internal_server_error'])
+            content = {
+                MESSAGE: "Failed to create exhibition advisory assignment."
+            }
+            return Response(content, status=status_code)
+
+        return Response(data[CONTENT], status=data[STATUS_CODE])
+
+
+#Checked on status_codes
 class getAllUsers(RetrieveAPIView):
     """
     get: Get all users in the database.
@@ -1705,7 +696,6 @@ class getAllUsers(RetrieveAPIView):
         ['method_not_allowed'],
         ['unsupported_media_type'],
         ['internal_server_error'],
-        ['resource_not_found', 'user'], 
     ]
     
     response_dict = build_fields('getAllUsers', response_types)
@@ -1757,9 +747,6 @@ class getAllUsers(RetrieveAPIView):
                 t_who = ActiveUsers.objects.filter(id=decoded['user_id']).values()[0]
                 who = Users.objects.filter(id=t_who['user_fk_id']).values()[0]    
 
-                if not demo:
-                    raise ApplicationError(['resource_not_found', 'User'])
-            
                 status_code, message = get_code_and_response(['success'])
                 content = {}
                 content[MESSAGE] = message
@@ -1805,13 +792,14 @@ class getAllUsers(RetrieveAPIView):
            return Response(content, status=status_code)
 
         return Response(data[CONTENT], status=data[STATUS_CODE])
+  
     
-
+# Checked on status_codes 
 class getFilteredExhibitions(RetrieveAPIView):
     """
     get: Get all temporary stored exhibitions of an instructor in the database.
     """
-    serializer_class = UserSerializer
+    serializer_class = FilterExhibitionSerializer
     permission_classes = (permissions.AllowAny,)
     response_types = [
         ['success'],
@@ -1820,7 +808,6 @@ class getFilteredExhibitions(RetrieveAPIView):
         ['method_not_allowed'],
         ['unsupported_media_type'],
         ['internal_server_error'],
-        ['resource_not_found', 'user'], 
     ]
     
     response_dict = build_fields('getFilteredExhibitions', response_types)
@@ -1829,7 +816,7 @@ class getFilteredExhibitions(RetrieveAPIView):
         'status',
         in_=openapi.IN_QUERY,
         description='The status of exhibitions you want to fetch.',
-        type=openapi.TYPE_NUMBER,
+        type=openapi.TYPE_STRING,
         required=True,
     )
     @swagger_auto_schema(
@@ -1872,49 +859,76 @@ class getFilteredExhibitions(RetrieveAPIView):
             req_data = request.GET
             serialized_request = serialize_request(request)
             log.debug("{} START".format(request_details(request)))
-            serialized_item = UserSerializer(data=req_data)
+            serialized_item = FilterExhibitionSerializer(data=req_data)
             status_flag = req_data.get('status')
-            
-            try:
-                log.debug("{} VALID DATA".format(request_details(request)))
-                exh_list = Exhibition.objects.filter(instructor_fk_id=decoded['user_id'],status=status_flag).values()
-
-                if not exh_list:
-                    raise ApplicationError(['resource_not_found', 'exhibition'])
-            
-                status_code, message = get_code_and_response(['success'])
-                content = {}
-                content[MESSAGE] = message
-                
-            
-                header_data = {}
-                header_data["exhibition"] = []
-                for ex in exh_list:
-                    temp = {}
-                    temp["id"] = ex['id']
-                    temp["title"] = ex['exhibition_title']
-                    temp["start_date"] = ex['start_date']
-                    temp["end_date"] = ex['end_date']
-                    temp["space"] = ex['space_assign']
-                    temp["description"] = ex['message']
-                    temp["src"] = ex['image']
-                    temp["status"] = ex['status']
-                    header_data["exhibition"].append(temp)
+            if not serialized_item.is_valid():
+                log.debug("{} VALIDATION ERROR: {}".format(
+                        request_details(request),
+                        serialized_item.formatted_error_response()
+                    )
+                )
+                response = {}
+                response[CONTENT] = serialized_item.formatted_error_response(include_already_exists=True)
+                response[STATUS_CODE] = status.HTTP_400_BAD_REQUEST
+                data = response
+            else:
+                try:
+                    log.debug("{} VALID DATA".format(request_details(request)))
+                    exh_list = Exhibition.objects.filter(instructor_fk_id=decoded['user_id'],status=status_flag).values()
+                    exh_list2 = AssignedExhibitionInstructor.objects.filter(instructor_fk_id=decoded["user_id"]).values()
                     
-                content[RESOURCE_OBJ] = header_data
-                response = {}
-                response[CONTENT] = content
-                response[STATUS_CODE] = status_code
-                log.debug("{} SUCCESS".format(request_details(request)))
-                data = response
-            except ApplicationError as e:
-                log.info("{} ERROR: {}".format(request_details(request), str(e)))
-                response = {}
-                log.info("e.get_response_body(): {}".format(e.get_response_body()))
-                log.info("e.status_code: {}".format(e.status_code))
-                response[CONTENT] = e.get_response_body()
-                response[STATUS_CODE] = e.status_code
-                data = response
+                    status_code, message = get_code_and_response(['success'])
+                    content = {}
+                    content[MESSAGE] = message
+                    
+                
+                    header_data = {}
+                    header_data["exhibitions"] = []
+                    for ex in exh_list:
+                        temp = {}
+                        temp["id"] = ex['id']
+                        temp["title"] = ex['exhibition_title']
+                        temp["start_date"] = ex['start_date']
+                        temp["end_date"] = ex['end_date']
+                        temp["space"] = ex['space_assign']
+                        temp["description"] = ex['message']
+                        temp["thumbnail"] = ex['image']
+                        temp["status"] = ex['status']
+                        listStuds = AssignedExhibitionStudents.objects.filter(assignment_fk_id=ex['id']).values()
+                        temp["participants"] = len(listStuds)
+                        header_data["exhibitions"].append(temp)
+                        
+                    for indoor2 in exh_list2:
+                        indoor = Exhibition.objects.filter(id=indoor2["assignment_fk_id"],status=status_flag).values()
+                        if(len(indoor) == 1):
+                            indoor = indoor[0]
+                            temp = {}
+                            temp["id"] = indoor['id']
+                            temp["title"] = indoor['exhibition_title']
+                            temp["start_date"] = indoor['start_date']
+                            temp["end_date"] = indoor['end_date']
+                            temp["description"] = indoor['message']
+                            temp["thumbnail"] = indoor['image']
+                            temp["status"] = indoor['status']
+                            temp["thumbnail"] = indoor['image']
+                            listStuds = AssignedExhibitionStudents.objects.filter(assignment_fk_id=indoor['id']).values()
+                            temp["participants"] = len(listStuds)
+                            header_data["exhibitions"].append(temp)
+                        
+                    content[RESOURCE_OBJ] = header_data
+                    response = {}
+                    response[CONTENT] = content
+                    response[STATUS_CODE] = status_code
+                    log.debug("{} SUCCESS".format(request_details(request)))
+                    data = response
+                except ApplicationError as e:
+                    log.info("{} ERROR: {}".format(request_details(request), str(e)))
+                    response = {}
+                    log.info("e.get_response_body(): {}".format(e.get_response_body()))
+                    log.info("e.status_code: {}".format(e.status_code))
+                    response[CONTENT] = e.get_response_body()
+                    response[STATUS_CODE] = e.status_code
+                    data = response
             
         
         except Exception as e:
@@ -1927,20 +941,252 @@ class getFilteredExhibitions(RetrieveAPIView):
 
         return Response(data[CONTENT], status=data[STATUS_CODE])
   
-  
-from django.http.response import FileResponse
-from django.http import HttpResponseForbidden
 
-def media_access(request, path):    
-    used_path = 'images/' + path
-    access_granted,decoded = at.authenticate(request,settings)
-    if access_granted == False:
-        return HttpResponseForbidden('Not authorized to access this media. CHECK') 
-    image = Artwork.objects.filter(src=used_path,user_fk_id=decoded['user_id']).values()
-    used_path = 'media/images/' + path
-    if (access_granted and len(image) > 0 ):
-        img = open(used_path, 'rb')
-        response = FileResponse(img)
-        return response
-    else:
-        return HttpResponseForbidden('Not authorized to access this media. CHECK')      
+def editor(request):
+    template = loader.get_template('web_app/editor/editor.html')
+    
+    access_tkn = request.COOKIES.get('access_tkn')
+    refresh_tkn = request.COOKIES.get('refresh_tkn')
+    if not access_tkn:
+        url = reverse('login')
+        return HttpResponseRedirect(url)
+    
+    tkn_okay, stu, decoded = at.authenticateStudent(request,settings)
+    if( tkn_okay == False):
+        url = reverse('login')
+        return HttpResponseRedirect(url)
+    
+    if( stu == False):
+        return HttpResponseRedirect('/web_app/teacher/dashboard/')
+    
+    assigned_id = request.GET.get('assign')
+    try:
+        temp_id = request.GET.get('temp')
+        if not temp_id:
+            raise Exception
+        crass = VR_Templates.objects.filter(id =temp_id ).values()
+        if not crass:
+            return HttpResponseRedirect('/web_app/teacher/dashboard/')
+        
+        demo = VR_Templates.objects.filter(id=temp_id).values()
+        temp = demo[0]['basis']
+        filename = temp[1:len(temp)]
+        payload = open(filename, "r").read()
+        
+        context = {
+		    'title': "VR Editor",
+		    'header_content': 'Index header content',
+            'userID': decoded['user_id'],
+            'email': decoded['sub'],
+            'name': decoded['name'],
+            'surname': decoded['surname'],
+            'organization': decoded['organization'],
+            'role': decoded['role'],
+            'basis': payload,
+            'exh_id': request.GET.get('assign'),
+            'temp_id': request.GET.get('temp'),
+            'script': ' ',
+            'reloaded' : 0
+	    }   
+    except Exception:
+        ready = VR_Exhibition.objects.filter(exhibition_fk_id=assigned_id,student_fk_id =decoded['user_id']).values()
+        if not ready:
+            return HttpResponseRedirect('/web_app/teacher/dashboard/')
+        
+        name = "media/" + ready[0]['vr_exhibition']
+        payload = open(name, "r").read()
+        
+        try:
+            name = "media/" + ready[0]['vr_script']
+            ac = open(name, "r").read()
+        except Exception:
+            ac = ' '
+
+        context = {
+		    'title': "VR Editor",
+		    'header_content': 'Index header content',
+            'userID': decoded['user_id'],
+            'email': decoded['sub'],
+            'name': decoded['name'],
+            'surname': decoded['surname'],
+            'organization': decoded['organization'],
+            'role': decoded['role'],
+            'basis': payload ,
+            'exh_id': assigned_id,
+            'temp_id': 0,
+            'x_script' : ac,
+            'reloaded' : 1
+	    }   
+        
+        
+    cross = AssignedExhibitionStudents.objects.filter(assignment_fk_id =assigned_id ,student_fk_id =decoded['user_id']).values()
+    if not cross:
+        return HttpResponseRedirect('/web_app/teacher/dashboard/')
+    
+
+    
+    return HttpResponse(template.render(context, request)) 
+
+
+def templateSelectionPage(request):
+    access_tkn = request.COOKIES.get('access_tkn')
+    refresh_tkn = request.COOKIES.get('refresh_tkn')
+    if not access_tkn:
+        url = reverse('login')
+        return HttpResponseRedirect(url)
+    
+    tkn_okay, stu, decoded = at.authenticateStudent(request,settings)
+    if( tkn_okay == False):
+        url = reverse('login')
+        return HttpResponseRedirect(url)
+    
+    if( stu == False):
+        return HttpResponseRedirect('/web_app/teacher/dashboard/')
+    
+    assigned_id = request.GET.get('assign')
+    cross = AssignedExhibitionStudents.objects.filter(assignment_fk_id =assigned_id ,student_fk_id =decoded['user_id']).values()
+    print(cross)
+    if not cross:
+        return HttpResponseRedirect('/web_app/teacher/dashboard/')
+    
+    crass = VR_Exhibition.objects.filter(exhibition_fk_id=assigned_id,student_fk_id =decoded['user_id']).values()
+    if  len(crass) > 0 :
+        return HttpResponseRedirect('/web_app/student/editor/?assign=' + assigned_id)
+    
+    template = loader.get_template('web_app/student/templateSelection.html')
+    exh = Exhibition.objects.filter(id=assigned_id).values()[0]
+    inst = Users.objects.filter(id=exh['instructor_fk_id']).values()[0]
+    full_name = inst["name"] + " " + inst["surname"]
+    titleExh = exh['exhibition_title']
+    sp_type = exh['space_assign']
+    context = {
+		'title': "Template Selection",
+		'header_content': 'Index header content',
+        'userID': decoded['user_id'],
+        'email': decoded['sub'],
+        'name': decoded['name'],
+        'surname': decoded['surname'],
+        'organization': decoded['organization'],
+        'role': decoded['role'],
+        'exh_id': assigned_id,
+        'instructor': full_name,
+        'exhibition_title': titleExh,
+        'space':  sp_type
+	}   
+    
+    return HttpResponse(template.render(context, request)) 
+
+
+# Checked on status_codes 
+class createVR(CreateAPIView):
+    """
+    post:
+    Creates a new vr exhibition instance
+    """
+    authentication_classes = [JWTAuthentication]
+    serializer_class = VRCreateSerializer
+    parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.FileUploadParser)
+    response_types = [
+        ['success'],
+        ['unauthorized'],
+        ['bad_request'],
+        ['method_not_allowed'],
+        ['unsupported_media_type'],
+        ['internal_server_error']
+    ]
+    response_dict = build_fields('createVR', response_types)
+
+    @swagger_auto_schema(
+        responses=response_dict,
+    )
+    def post(self, request, *args, **kwargs):
+        log.debug("{} Received request".format(request_details(request)))
+        try:
+            access_tkn = request.COOKIES.get('access_tkn')
+            refresh_tkn = request.COOKIES.get('refresh_tkn')
+            if not access_tkn:
+                raise Exception("No access token provided!")
+
+            tkn_okay, stud, decoded = at.authenticateStudent(request,settings)
+            if( tkn_okay == False):
+                raise Exception("Access token invalid!")
+
+            if( stud == False):
+                raise Exception("User account unauthorized!")
+            
+        except Exception as e:
+                log.error("{} Internal error: {}".format(request_details(request), str(e)))
+                status_code, _ = get_code_and_response(['unauthorized'])
+                content = {
+                    MESSAGE: "Access token is invalid."
+                }
+                return Response(content, status=status_code)
+        try:
+            response = {}
+            data = {}
+            req_data = request.data
+            serialized_request = serialize_request(request)
+            log.debug("{} START".format(request_details(request)))
+            serialized_item = VRCreateSerializer(data=req_data)
+
+            if not serialized_item.is_valid():
+                log.debug("{} VALIDATION ERROR: {}".format(
+                        request_details(request),
+                        serialized_item.formatted_error_response()
+                    )
+                )
+                response = {}
+                response[CONTENT] = serialized_item.formatted_error_response(include_already_exists=True)
+                response[STATUS_CODE] = status.HTTP_400_BAD_REQUEST
+                data = response
+            else:
+                with transaction.atomic():
+                    try:
+                        log.debug("{} VALID DATA".format(request_details(request)))
+                        print(request.POST)
+                        post = request.POST.copy() # to make it mutable
+                        post['student_fk'] = decoded['user_id']
+                        try:
+                            test = VR_Exhibition.objects.get(student_fk_id= decoded['user_id'], exhibition_fk_id=post['exhibition_fk'])
+                            pathToDelete = "/code/media/" + str(test.vr_exhibition)
+                            os.remove(pathToDelete)
+                            try:
+                                print("DELETE SCRIPT")
+                                pathToDelete = "/code/media/" + str(test.vr_script)
+                                os.remove(pathToDelete)
+                                test.vr_script = request.FILES['vr_script']
+                                test.save(update_fields=['vr_script'])
+                            except Exception:
+                                pass
+                                
+                            test.vr_exhibition = request.FILES['vr_exhibition']
+                            test.save(update_fields=['vr_exhibition'])
+                        except Exception:
+                            form = VRExhibitionForm(post, request.FILES)
+                            form.save()
+                        status_code, message = get_code_and_response(['success'])
+                        content = {}
+                        content[MESSAGE] = message
+                        content[RESOURCE_NAME] = 'vr_exhibition'
+                        response = {}
+                        response[CONTENT] = content
+                        response[STATUS_CODE] = status_code
+                        log.debug("{} SUCCESS".format(request_details(request)))
+                        data = response
+                    except ApplicationError as e:
+                        log.info("{} ERROR: {}".format(request_details(request), str(e)))
+                        response = {}
+                        response[CONTENT] = e.get_response_body()
+                        response[STATUS_CODE] = e.status_code
+                        data = response
+
+        except Exception as e:
+            log.error("{} Internal error: {}".format(request_details(request), str(e)))
+            status_code, _ = get_code_and_response(['internal_server_error'])
+            content = {
+                MESSAGE: "Failed to create VR exhibition."
+            }
+            return Response(content, status=status_code)
+
+        return Response(data[CONTENT], status=data[STATUS_CODE])
+    

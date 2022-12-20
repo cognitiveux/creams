@@ -18,8 +18,10 @@ function submit() {
     for (var i = 0; i < instructors.childElementCount; i++) {
         var instructor = instructors.children[i];
         // EXTRA CAUTION WHEN CHANGING THE TABLE LAYOUT
-        if(instructor.children[3].children[0].children[0].checked)
+        if(instructor.children[3].children[0].children[0].checked){
             selected_instr.push(instructor.id);
+            postAdvisorConnection(instructor.id,exh_id);
+        }
 
     }
     console.log(selected_studs);
@@ -43,9 +45,7 @@ function createTableElement() {
             let student_table = document.getElementById("student_table");
             let instructor_table = document.getElementById("instructor_table");
             let j = 0;
-            for (let i = 0; j < 5 * response.length; i++) {
-                j++;
-                if (i === 2) i = 0;
+            for (let i = 0; i < response.length; i++) {
                 let tr = document.createElement('tr');
                 // att 1 
                 let td0 = document.createElement('td');
@@ -133,6 +133,30 @@ function postStudentConnection(student,assignment){
     xhr.open("POST", "/web_app/assignment/assign_student", true);
     let formData = new FormData(); 
     formData.append("student_fk", student); 
+    formData.append("assignment_fk", assignment); 
+    xhr.send(formData);
+}
+
+function postAdvisorConnection(instructor,assignment){
+    var xhr = new XMLHttpRequest();
+    xhr.withCredentials = true;
+
+    xhr.addEventListener("readystatechange", function () {
+        // Only run if the request is complete
+        if (xhr.readyState !== 4) return;
+        // Process our return data
+        if (xhr.status >= 200 && xhr.status < 300) {
+            // What to do when the request is successful
+            var response = JSON.parse(xhr.responseText);
+            console.log(response);
+        } else {
+            console.log('error', xhr);
+        }
+    });
+
+    xhr.open("POST", "/web_app/assignment/assign_instructors", true);
+    let formData = new FormData(); 
+    formData.append("instructor_fk", instructor); 
     formData.append("assignment_fk", assignment); 
     xhr.send(formData);
 }

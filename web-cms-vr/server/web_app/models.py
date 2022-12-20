@@ -193,6 +193,13 @@ class AssignedExhibitionInstructor(models.Model):
 
     instructor_fk = models.ForeignKey(Users, on_delete=models.CASCADE, to_field='id')
     assignment_fk = models.ForeignKey(Exhibition, on_delete=models.CASCADE, to_field='id')
+
+
+class GeneralAssessment(models.Model):
+    instructor_fk = models.ForeignKey(Users, on_delete=models.CASCADE, to_field='id',related_name='instructor')
+    assignment_fk = models.ForeignKey(Exhibition, on_delete=models.CASCADE, to_field='id')
+    student_fk = models.ForeignKey(Users, on_delete=models.CASCADE, to_field='id',related_name='student')
+    assessement = models.CharField(max_length=2000)
     
     
 class Artwork(models.Model):
@@ -205,10 +212,10 @@ class Artwork(models.Model):
   		to_field='id'
 	)
     year =  models.IntegerField()
-    height = models.DecimalField(max_digits=20, decimal_places=2)
-    width = models.DecimalField(max_digits=20, decimal_places=2)
-    depth = models.DecimalField(max_digits=20, decimal_places=2)
-    unit = models.DecimalField(max_digits=20, decimal_places=2)
+    height = models.DecimalField(max_digits=20, decimal_places=6)
+    width = models.DecimalField(max_digits=20,  decimal_places=6)
+    depth = models.DecimalField(max_digits=20,  decimal_places=6)
+    unit = models.DecimalField(max_digits=20,   decimal_places=6)
     technique = models.CharField(max_length=200)
     genre = models.CharField(max_length=200)
     art_type = models.CharField(max_length=200)
@@ -218,16 +225,18 @@ class Artwork(models.Model):
     
    
 class OutdoorExhibition(models.Model):
-    title = models.CharField(max_length=200)
     user_fk = models.ForeignKey(
 		Users,
 		on_delete=models.CASCADE,
   		default=1,
   		to_field='id'
 	)
-    start_date = models.DateField(null=False)
-    end_date = models.DateField(null=False)
-    description = models.CharField(max_length=2000, default=' ')
+    exhibition_fk = models.ForeignKey(
+		Exhibition,
+		on_delete=models.CASCADE,
+		to_field='id',
+  		default=42,
+	)
     
     def __str__(self):
         return self.title
@@ -247,11 +256,29 @@ class OutdoorArtwork(models.Model):
      
      
 class VR_Templates(models.Model):
-    basis = models.CharField(max_length=20000)
+    basis = models.FileField(upload_to='templates')
     name = models.CharField(max_length=200)
     rooms = models.IntegerField()
+    thumbnail = models.ImageField(upload_to='templates/thumbnails',null=True)
     
     def __str__(self):
         return self.basis
     
 
+
+class VR_Exhibition(models.Model):
+    #class Meta:
+    #    unique_together = (('exhibition_fk', 'student_fk'),)
+    student_fk = models.ForeignKey(
+		Users,
+  		on_delete=models.CASCADE, 
+    	to_field='id'
+	)
+    exhibition_fk = models.ForeignKey(
+		Exhibition,  		
+  		on_delete=models.CASCADE, 
+    	to_field='id'
+	)
+    vr_exhibition = models.FileField(upload_to='vr_exhibitions')
+    vr_script = models.FileField(upload_to='vr_exhibitions/scripts',null=True)
+    

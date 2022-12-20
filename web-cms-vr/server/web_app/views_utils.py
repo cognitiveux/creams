@@ -8,7 +8,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 from .application_error import ApplicationError
-import math
+from .authentication_tools import auth_tools as at
+
+from math import radians, cos, sin, asin, sqrt
 from .models import *
 from .logging import logger as log
 from web_app.models import (
@@ -107,7 +109,6 @@ def get_ip_address(request):
 
     return ip
 
-
 def request_details(request):
     '''
     Returns details for the request as a string. This is a helper function for logging.
@@ -120,7 +121,6 @@ def request_details(request):
         <ip> <user> if possible else <ip>
     '''
     username = None
-
     if isinstance(request, dict):
         user = request.get('user')
         if user:
@@ -129,8 +129,9 @@ def request_details(request):
             username = request['data'].get('username')
     else:
         try:
-            username = request.user.email or request.data.get('email')
-        except AttributeError as e:
+            access_granted,decoded = at.authenticate(request,settings)
+            username = decoded['sub']
+        except Exception:
             username = None
 
     if not username:
@@ -205,20 +206,48 @@ def send_verification_email(email, verification_code, verification_type):
         log.error("Failed to send verification email to address: {}. Reason: {}".format(email, str(e)))
         raise
 
-
 # This function sorts a QuerySet based on its distance from a coordinate set.
-def sortGeo(list,lat,lon):
-    list = list.annotate(distance= ExpressionWrapper( F('id') - F('id')  + ((lat - F('lat'))**2 + (lon - F('lon'))**2)**0.5, output_field=DecimalField()))
-    list = list.annotate(lat= ExpressionWrapper( F('lat'), output_field=DecimalField()))
-    list = list.annotate(lon= ExpressionWrapper( F('lon'), output_field=DecimalField()))
-    return list.order_by('distance')
+def sortGeo(demo_list,lat,lon):
+    artworks_list = {}
+    cnt = 0
+    for item in demo_list:
+        artworks_list[cnt] = [item['lat'],item['lon'],item['id']]
+        cnt = cnt + 1
+        
+    tmp_list = []
+    for k, v  in artworks_list.items():      
+        temp_ins = []
+        temp_ins.append(v)
+        temp_ins.append(k)
+        tmp_list.append(temp_ins) 
+        
+    artworks_list = sorted(tmp_list, key=lambda x: geoDistance(float(lat),float(lon),x[0][0],x[0][1]))
+    sorted_list = []
+    for st in artworks_list:
+        sorted_list.append(demo_list[st[1]])
+        
+    return sorted_list
 
-# This function calculates the cartesian distance between two sets of (x,y) coordinates
-def geoDistance(lat1,lon1,lat,lon):
-    x = float(lat1) - float (lat)
-    y = float(lon1) - float (lon)
-    sub = x**2 + y**2
-    return  math.sqrt(sub)
+# This function calculates the distance between two sets of (x,y) coordinates in the earth
+def geoDistance(lat1,lon1,lat2,lon2):
+    # The math module contains a function named
+    # radians which converts from degrees to radians.
+    lon1 = radians(lon1)
+    lon2 = radians(lon2)
+    lat1 = radians(lat1)
+    lat2 = radians(lat2)
+      
+    # Haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+ 
+    c = 2 * asin(sqrt(a))
+    
+    # Radius of earth in kilometers. Use 3956 for miles
+    r = 6371
+    # calculate the result
+    return(c * r)
    
 # This function transforms an image to a base64 encoded string
 def getBase64(src):
@@ -230,3 +259,7 @@ def changeExhibitionState(exh_id,new_state):
     status= new_state
     )
     
+def chechRole(user_id,role):
+    
+    
+    return Users.objects.filter(id=user_id).values()[0]["role"] == role

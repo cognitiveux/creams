@@ -1,41 +1,36 @@
-console.log(organization);
+const temporary = document.getElementById('temporary');
+const accepting = document.getElementById('accepting');
+const ready = document.getElementById('ready');
+const started = document.getElementById('started');
+const assessed = document.getElementById('assessed');
+const published = document.getElementById('published');
+const targetURL = "/web_app/teacher/filter_exhibitions/?filter=";
 
-function getCookie(cname) {
-    let name = cname + "=";
-    let ca = document.cookie.split(';');
-    for(let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
-        return c.substring(name.length, c.length);
-      }
-    }
-    return "";
+temporary.addEventListener("click", filter);
+accepting.addEventListener("click", filter);
+ready.addEventListener("click", filter);
+started.addEventListener("click", filter);
+assessed.addEventListener("click", filter);
+published.addEventListener("click", filter);
+
+function filter() {
+  if (this === temporary) {
+    //console.log("Temporary Stored");
+    window.location.href = targetURL + "Temporary Stored";
+  } else if (this === accepting) {
+    //console.log(targetURL + "Accepting Artworks" + "'");
+    window.location.href = targetURL + "Accepting Artworks";
+  } else if (this === ready) {
+    //console.log("Ready to be Assessed");
+    window.location.href = targetURL + "Ready to be Assessed";
+  } else if (this === started) {
+    //console.log("Assessment Started");
+    window.location.href = targetURL + "Assessment Started";
+  } else if (this === assessed) {
+    //console.log("Assessed");
+    window.location.href = targetURL + "Assessed";
+  } else if (this === published) {
+    //console.log("Published");
+    window.location.href = targetURL + "Published";
   }
-  
-/*
-var xhr1 = new XMLHttpRequest();
-// Setup our listener to process completed requests
-xhr1.onreadystatechange = function () {
-    // Only run if the request is complete
-    if (xhr1.readyState !== 4) return;
-    // Process our return data
-    if (xhr1.status >= 200 && xhr1.status < 300) {
-        // What to do when the request is successful
-        var response = JSON.parse(xhr1.responseText);
-        //var image = MEDIA  + response['resource_obj']['artworks'][1]['src'];
-        //document.getElementById("testpic").setAttribute('src',image );
-        console.log(response);
-    } else {
-        console.log('error', xhr1);
-    }
-};
-// Create and send a GET request
-// The first argument is the post type (GET, POST, PUT, DELETE, etc.)
-// The second argument is the endpoint URL
-xhr1.open('GET', '/web_app/artworks/student_list', true);
-xhr1.setRequestHeader('Authorization', 'Bearer ' + getCookie("access_tkn"));
-xhr1.send();
-*/
+}

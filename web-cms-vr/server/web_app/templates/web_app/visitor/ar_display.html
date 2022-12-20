@@ -1,11 +1,14 @@
-{% extends 'web_app/visitor_base.html' %}
+{% extends 'web_app/bases/ar_visitor_base.html' %}
 
 {% load staticfiles %}
 
 {% block scripts %}
+<script>
+    const exh_id = '{{exh_id}}'
+</script>
 {{ block.super }}
 <script src="{% static "/web_app/js/customJS/map_display.js" %}"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYt547YY2r22dJMgJF9iq6otztcfsCGUY&callback=myMap">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYt547YY2r22dJMgJF9iq6otztcfsCGUY&callback=initMap">
 </script>
 {% endblock %}
 
@@ -21,9 +24,9 @@
         <div class="row">
             <div class="col-sm">
                 <!--begin::Title-->
-                <h3 class="fs-2hx text-dark mb-5" align="left">{{ exh_title }}</h3>
+                <h3 class="fs-2hx text-dark mb-5" id="title_field" align="left"></h3>
                 <!--end::Title-->
-                <h6 class="fw-semibold " align="left">by {{teacher }} </h6>
+                <h6 class="fw-semibold " id="owner_name_field" align="left"></h6>
             </div>
         </div>
     </div>
@@ -33,28 +36,14 @@
     <div class="col-xl-0.5 col-0.5 col-sm-1">
     </div>
     <div class="col-xl-4 col-12 col-sm-12">
-        <div id="googleMap" style="width0:50px;height:600px;"></div>
+        <div id="map" style="height:600px;"></div>
     </div>
     <!-- Gallery -->
-    <div class="col-lg-2 col-md-12 mb-4 mb-lg-0">
-        <img src="{%static "/web_app/media/picassoExhibition/pic9.webp" %}"
-            class="w-100 shadow-1-strong rounded mb-4" />
-        <img src="{%static "/web_app/media/picassoExhibition/pic4.webp" %}"
-            class="w-100 shadow-1-strong rounded mb-4" />
-    </div>
-
-    <div class="col-lg-2 mb-4 mb-lg-0">
-        <img src="{%static "/web_app/media/picassoExhibition/pic12.webp" %}"
-            class="w-100 shadow-1-strong rounded mb-4" />
-
-    </div>
-
-    <div class="col-lg-2 mb-4 mb-lg-0">
-        <img src="{%static "/web_app/media/picassoExhibition/pic15.webp" %}"
-            class="w-100 shadow-1-strong rounded mb-4" />
-
-        <img src="{%static "/web_app/media/picassoExhibition/pic3.jfif" %}"
-            class="w-100 shadow-1-strong rounded mb-4" />
+    <div class="col-xl-7 col-12 col-sm-12">
+        <div class="flexbin flexbin-margin" id="imagegrid">
+            <!-- Dynamic Content-->
+            <!-- Dynamic Content-->
+        </div>
     </div>
     <!-- Gallery -->
 </div>

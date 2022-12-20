@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mercedes-Benz G55/W263 (TRAVELER EDITION)
+* source:	https://sketchfab.com/3d-models/mercedes-benz-g55w263-traveler-edition-ae2c804f7f9d44ba9b0db3990d46f7a6
+* author:	Veisun (https://sketchfab.com/Veisun)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mercedes-Benz G55/W263 (TRAVELER EDITION)" (https://sketchfab.com/3d-models/mercedes-benz-g55w263-traveler-edition-ae2c804f7f9d44ba9b0db3990d46f7a6) by Veisun (https://sketchfab.com/Veisun) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

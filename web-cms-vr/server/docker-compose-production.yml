@@ -36,7 +36,7 @@ services:
       - web
   creams-server:
     build: .
-    command: bash -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py collectstatic --no-input && gunicorn --config=/code/config/gunicorn/config.py creams_project.wsgi:application"
+    command: bash -c "python3 manage.py makemigrations web_app && python3 manage.py migrate && python3 manage.py collectstatic --no-input && gunicorn --config=/code/config/gunicorn/config.py creams_project.wsgi:application"
     container_name: creams-server
     env_file:
       - ./django_variables.env

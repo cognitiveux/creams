@@ -8,8 +8,39 @@
 }
 
 .carou-pics {
+    max-height: 200px !important;
+    max-width: 350px !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.form-pics {
+    max-height: 200px !important;
+    max-width: 350px !important;
+    display: flex !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.rowlist {
+    border-style: solid;
+    border-radius: 0.5px;
+}
+
+.landingpageimages {
+    height: 200px !important;
+    width: 350px !important;
+}
+
+.carou-pics-holder {
     height: 200px;
     width: 350px;
+
+}
+
+.hidden {
+    display: none !important;
 }
 
 .lady-lips {
@@ -99,7 +130,8 @@
 
 
 .select2-results__option--highlighted {
-    background-color: #A2C5FE !important;
+    background-color: #f38380 !important;
+    color: #FFFFFF !important;
 }
 
 #myEmbeddedScene {
@@ -151,4 +183,37 @@
 
 .locked {
     border-color: var(--kt-primary) !important;
+}
+
+.orangeText {
+    color: rgb(241, 157, 0) !important;
+}
+
+.greenText {
+    color: #20c997 !important;
+}
+
+.blueText {
+    color: #7da5e5 !important;
+}
+
+.redText {
+    color: rgb(219, 25, 25) !important;
+}
+
+.yellowText {
+    color: rgb(204, 204, 42) !important;
+}
+
+.cyanText {
+    color: rgb(70, 120, 227) !important;
+}
+
+.flatpickr-day:hover {
+    background-color: #f38380 !important;
+    color: #000000 !important;
+}
+
+.cursor-ptr {
+    cursor: pointer;
 }

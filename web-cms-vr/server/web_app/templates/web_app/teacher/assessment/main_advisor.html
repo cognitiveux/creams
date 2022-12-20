@@ -1,13 +1,43 @@
-{% extends 'web_app/teacher_base.html' %}
+{% extends 'web_app/bases/teacher_base.html' %}
 
 {% load staticfiles %}
 
 {% block scripts %}
+<script>
+    const exh_id = '{{exh_id}}';
+    const student_id = '{{student_id}}'
+    const l_name = '{{l_name}}';
+    const f_name = '{{f_name}}';
+    const all = '{{all}}';
+    console.table(all);
+
+    function goBack() {
+        document.location.href = "/web_app/teacher/student_assessment/?q=" + exh_id;
+    }
+</script>
 {{ block.super }}
-<script defer src="{% static "/web_app/js/customJS/teacher_dashboard.js" %}"></script>
+<script src="{%static "/web_app/js/customJS/assess.js" %}"></script>
+<script src="{%static "/web_app/js/customJS/main_assessment.js" %}"></script>
 {% endblock %}
 
 {% block toolbar %}
+<a href="/web_app/teacher/exhibition/" class="menu-item  me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Initiate an
+        Exhibition
+    </span>
+    <!--end:Menu link-->
+</a>
+
+<a href="/web_app/teacher/assessment/" class="menu-item here me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Assessment
+    </span>
+    <!--end:Menu link-->
+
+</a>
 
 {% endblock %}
 
@@ -27,7 +57,7 @@
                 <!--begin::help--><a href="#"
                     class="btn btn-success btn-success-custom fw-semibold px-8 py-3 teal ">Help</a>
                 <!--end::help-->
-                <!--begin::cancel--><a href="/web_app/teacher/student_assessment/"
+                <!--begin::cancel--><a onclick="goBack()"
                     class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">Back to student list</a>
                 <!--end::cancel-->
                 </button>
@@ -59,7 +89,7 @@
                 <!--begin::Item-->
                 <div class="col text-center mb-9">
                     <!--begin::Photo-->
-                    <a href="https://www.google.com/">
+                    <a href="#">
                         <img alt="exh1"
                             class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                             src="{% static "/web_app/media/exh/exh3.jfif" %}"></a>
@@ -148,19 +178,19 @@
         <div class="py-5 py-lg-5">&nbsp;</div>
          AR Exhibition-->
         <div class="row">
-            <div class="col-4">
+            <div class="col-4" id="addThumb">
                 <!--begin::Card-->
                 <div class="card" style="height:100%">
                     <!--begin::Card body-->
                     <div class="card-body d-flex flex-center flex-column py-9 px-5">
                         <!--begin::Avatar-->
                         <div class="symbol symbol-65px symbol-circle mb-5">
-                            <span class="symbol-label fs-2x fw-semibold text-warning bg-light-warning">A</span>
+                            <span class="symbol-label fs-2x fw-semibold" id="FIRST_LETTER"></span>
                         </div>
                         <!--end::Avatar-->
                         <!--begin::Name-->
-                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0">Alex
-                            Patterson</a>
+                        <a  class="fs-4 text-gray-800 fw-bold mb-0">{{f_name}}
+                            {{l_name}}</a>
                         <!--end::Name-->
                         <!--begin::Info-->
                         </br>
@@ -185,12 +215,12 @@
                     <div class="col-6">
                         <!--begin::Input group-->
                         <div class="d-flex flex-column mb-10 fv-row fv-plugins-icon-container">
-                            <label class="fs-2 fw-semibold mb-2">AR overall assessment</label><textarea
+                            <label class="fs-2 fw-semibold mb-2">AR overall assessment</label><textarea id="textBox1"
                                 class="form-control form-control-solid" rows="10" name="message" placeholder=""
-                                style=" resize: none;"></textarea>
+                                style=" resize: none;">{{assessment}}</textarea>
                         </div>
-                        <a href="/web_app/teacher/student_assessment/"
-                            class="btn btn-success btn-success-custom fw-semibold pink ">Submit Feedback</a>
+                        <a class="btn btn-success btn-success-custom fw-semibold pink "
+                            onclick='submitAssessment()'>Submit Feedback</a>
                         <!--end::Input group-->
                     </div>
                     <div class="col-6">
@@ -210,7 +240,7 @@
                                 <!--begin::Item-->
                                 <div class="col text-center mb-9">
                                     <!--begin::Photo-->
-                                    <a href="https://www.google.com/">
+                                    <a href="#">
                                         <img alt="exh1"
                                             class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                             src="{% static "/web_app/media/exh/exh4.jfif" %}"></a>
@@ -219,8 +249,7 @@
                                     <div class="mb-0">
                                         <!--begin::Position-->
                                         <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                        <a href="/web_app/teacher/student_assessment/"
-                                            class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                        <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                         <!--begin::Position-->
                                     </div>
                                     <!--end::Person-->
@@ -229,7 +258,7 @@
                                 <!--begin::Item-->
                                 <div class="col text-center mb-9">
                                     <!--begin::Photo-->
-                                    <a href="https://www.google.com/">
+                                    <a href="#">
                                         <img alt="exh1" id="testpic"
                                             class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                             src="{% static "/web_app/media/exh/exh3.jfif" %}"></a>
@@ -238,8 +267,7 @@
                                     <div class="mb-0">
                                         <!--begin::Position-->
                                         <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                        <a href="/web_app/teacher/student_assessment/"
-                                            class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                        <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                         <!--begin::Position-->
                                     </div>
                                     <!--end::Person-->
@@ -248,7 +276,7 @@
                                 <!--begin::Item-->
                                 <div class="col text-center mb-9">
                                     <!--begin::Photo-->
-                                    <a href="https://www.google.com/">
+                                    <a href="#">
                                         <img alt="exh1"
                                             class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                             src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
@@ -257,8 +285,7 @@
                                     <div class="mb-0">
                                         <!--begin::Position-->
                                         <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                        <a href="/web_app/teacher/student_assessment/"
-                                            class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                        <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                         <!--begin::Position-->
                                     </div>
                                     <!--end::Person-->

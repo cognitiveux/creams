@@ -1,3 +1,5 @@
+console.log("ROOM COMPONENT - START");
+
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -779,3 +781,4 @@
 
 /***/ })
 /******/ ]);
+console.log("ROOM COMPONENT - END");

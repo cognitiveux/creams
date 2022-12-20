@@ -2,11 +2,10 @@ function updateDOM() {
     //var scene = document.querySelector('a-scene');
     //scene.flushToDOM(true);
     let z = document.getElementById(ACTIVE_ELEMENT);
-    console.log(z.id);
+    //console.log(z.id);
     document.querySelector('#' + z.id).flushToDOM(true);
-    console.log('DOM updated');
+    //console.log('DOM updated');
 }
-
 function left() {
     document.getElementById(ACTIVE_ELEMENT).setAttribute('position', {
         x: document.getElementById(ACTIVE_ELEMENT).getAttribute('position').x - 0.33,

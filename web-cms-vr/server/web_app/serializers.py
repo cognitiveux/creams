@@ -426,12 +426,42 @@ class GreetSerializer(serializers.ModelSerializer):
 class ArtworkSerializer(CustomSerializer):
     class Meta:
         model = Artwork
-        fields = '__all__'
-#        extra_kwargs = {
-#            'id' : {
-#                'required' : True
-#            }  
-#        }
+        fields = ('src', 'name', 'user_fk', 'year', 'height','width','depth','unit','technique','genre','art_type')
+        extra_kwargs = {
+            'src': {
+                'required': True
+            },
+            'name': {
+                'required': True
+            },
+            'user_fk': {
+                'required': False
+            },
+            'year': {
+                'required': True
+            },
+            'height': { 
+                'required': True
+            },
+            'width': { 
+                'required': True
+            },
+            'depth': { 
+                'required': True
+            },
+            'unit': { 
+                'required': True
+            },
+            'technique': { 
+                'required': True
+            },
+            'genre': { 
+                'required': True
+            },
+            'art_type': { 
+                'required': True
+            },
+        }
         
 class OutdoorExhibitionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -494,6 +524,26 @@ class ExhibitionSerializer(CustomSerializer):
         }
         
         
+class VRCreateSerializer(CustomSerializer):
+    class Meta:
+        model = VR_Exhibition
+        fields = ('student_fk', 'exhibition_fk', 'vr_exhibition','vr_script')
+        extra_kwargs = {
+            'student_fk': {
+                'required': False
+            },
+            'exhibition_fk': {
+                'required': True
+            },
+            'vr_exhibition': {
+                'required': True
+            },
+            'vr_script': {
+                'required': False
+            },
+        }
+        
+        
 class VR_TemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = VR_Templates
@@ -506,3 +556,38 @@ class AssignStudentSerializer(CustomSerializer):
         fields = '__all__'
         
         
+class AssignAdvisorSerializer(CustomSerializer):
+    class Meta:
+        model = AssignedExhibitionInstructor
+        fields = '__all__'
+        
+        
+class GeneralAssessmentSerializer(CustomSerializer):
+    class Meta:
+        model = GeneralAssessment
+        fields = ('instructor_fk', 'assignment_fk', 'student_fk', 'assessement')
+        extra_kwargs = {
+            'instructor_fk': {
+                'required': True
+            },
+            'assignment_fk': {
+                'required': True
+            },
+            'student_fk': {
+                'required': True
+            },
+            'assessement': {
+                'required': True
+            },
+        }
+    
+class FilterExhibitionSerializer(CustomSerializer):
+    status = serializers.ChoiceField(choices=ExhibitionStatus.STATUS_CHOICES)
+    class Meta:
+        model = Exhibition
+        fields = ('status',)
+        extra_kwargs = {
+            'status': {
+                'required': True
+            },
+        }

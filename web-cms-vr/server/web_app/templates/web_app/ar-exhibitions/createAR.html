@@ -1,15 +1,37 @@
-{% extends 'web_app/student_base.html' %}
+{% extends 'web_app/bases/student_base.html' %}
 
 {% load staticfiles %}
 
 {% block scripts %}
-{{ block.super }}
 <script src="{% static "/web_app/js/customJS/map_handling.js" %}"></script>
+<script src="{% static "/web_app/plugins/custom/fslightbox/fslightbox.bundle.js"  %}"></script>
+<script>
+    const exh_id = '{{exh_id}}';
+</script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAYt547YY2r22dJMgJF9iq6otztcfsCGUY&callback=myMap">
 </script>
+{{ block.super }}
+
 {% endblock %}
 
+
 {% block toolbar %}
+<a href="/web_app/student/exhibitions/" class="menu-item  here me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        My Exhibitions
+    </span>
+    <!--end:Menu link-->
+</a>
+
+<a href="/web_app/student/artworks/" class="menu-item  me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        My Artworks
+    </span>
+    <!--end:Menu link-->
+
+</a>
 
 {% endblock %}
 
@@ -34,7 +56,7 @@
                 <!--begin::Submit--><button type="submit" onclick="submitOutdoor()"
                     class="btn btn-success btn-success-custom fw-semibold px-10 py-3" id="kt_modal_new_target_submit">
                     <!--begin::Indicator label-->
-                    <span class="indicator-label" >Save</span>
+                    <span class="indicator-label">Save</span>
                     <!--end::Indicator label-->
                     <!--begin::Indicator progress-->
                     <span class="indicator-progress">Please wait... <span
@@ -58,12 +80,15 @@
             id='textArea' rows="10" name="message" placeholder="" style=" resize: none;"></textarea>
         <div>
             <div id="artworks" class="mh-350px scroll-y me-n7 pe-7">
+                <!-- Dynamic Content-->
+
+                <!-- Dynamic Content-->
             </div>
         </div>
     </div>
 
 </div>
 <div class="py-5 py-lg-5">&nbsp;</div>
-<div class="py-5 py-lg-5">&nbsp;</div>  
+<div class="py-5 py-lg-5">&nbsp;</div>
 <!--end::Container-->
 {% endblock %}

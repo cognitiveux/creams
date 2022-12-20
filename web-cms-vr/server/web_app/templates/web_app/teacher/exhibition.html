@@ -1,10 +1,11 @@
-{% extends 'web_app/teacher_base.html'%}
+{% extends 'web_app/bases/teacher_base.html'%}
 
 {% load staticfiles %}
 
 {% block scripts %}
 <script>
     const spaces_py = '{{spaces}}';
+
     function de_list_python(list) {
         let words = [];
         let word = [];
@@ -68,39 +69,42 @@
             <!-- begin:: middle-->
             <div class="card-body p-lg-17">
                 <div class="mb-18 ">
-                    <div class="row text-center">
-                        <div class="col-sm">
-                            <!--begin::Title-->
-                            <h3 class="fs-2hx text-dark mb-5">Basic Exhibition Fields</h3>
-                            <!--end::Title-->
+                    <div class="container-fluid col-lg-9 col-11 col-md-9 col-xl-11 card-body p-lg-2">
+                        <div class="row text-center">
+                            <div class="col-sm-12 col-lg-12 col-md-12 col-12 col-xl-4">
+                                <!--begin::Title-->
+                                <h3 class="fs-2hx text-dark mb-5">Basic Exhibition Fields</h3>
+                                <!--end::Title-->
+                            </div>
+                            <div class="col-sm-12 col-lg-12 col-md-12 col-12 col-xl-8">
+                                <!--begin::help--><a href="#"
+                                    class="btn btn-success btn-success-custom fw-semibold px-8 py-3 teal ">Help</a>
+                                <!--end::help-->
+                                <!--begin::cancel--><a href="#" id="kt_modal_new_target_cancel"
+                                    class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">cancel</a>
+                                <!--end::cancel-->
+                                <!--begin::Submit--><button type="submit"
+                                    class="btn btn-success btn-success-custom fw-semibold px-10 py-3"
+                                    id="kt_modal_new_target_submit">
+                                    <!--begin::Indicator label-->
+                                    <span class="indicator-label">Save and proceed to student selection</span>
+                                    <!--end::Indicator label-->
+                                    <!--begin::Indicator progress-->
+                                    <span class="indicator-progress">Please wait... <span
+                                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    <!--end::Indicator progress-->
+                                </button>
+                                <!--end::Submit-->
+                            </div>
                         </div>
-                        <div class="col-sm">
-                            <!--begin::help--><a href="#"
-                                class="btn btn-success btn-success-custom fw-semibold px-8 py-3 teal ">Help</a>
-                            <!--end::help-->
-                            <!--begin::cancel--><a href="#" id="kt_modal_new_target_cancel"
-                                class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">cancel</a>
-                            <!--end::cancel-->
-                            <!--begin::Submit--><button type="submit"
-                                class="btn btn-success btn-success-custom fw-semibold px-10 py-3"
-                                id="kt_modal_new_target_submit">
-                                <!--begin::Indicator label-->
-                                <span class="indicator-label">Save and proceed to student selection</span>
-                                <!--end::Indicator label-->
-                                <!--begin::Indicator progress-->
-                                <span class="indicator-progress">Please wait... <span
-                                        class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                <!--end::Indicator progress-->
-                            </button>
-                            <!--end::Submit-->
-                        </div>
-                    </div><br><br><br>
+                    </div>
+                    <br><br><br>
                     <div class=" py-5 py-lg-5" id="kt_toolbar">
                         <!--begin::Container-->
                         <div id="kt_modal_new_target" class="container-xxl py-5">
                             <!--begin::Form-->
-                            <form action="" class="form mb-15 fv-plugins-bootstrap5 fv-plugins-framework"
-                                method="POST" id="kt_modal_new_target_form" enctype='multipart/form-data'>
+                            <form action="" class="form mb-15 fv-plugins-bootstrap5 fv-plugins-framework" method="POST"
+                                id="kt_modal_new_target_form" enctype='multipart/form-data'>
                                 <input type='hidden' />
                                 {% csrf_token %}
                                 <!--begin::Row-->
@@ -123,7 +127,8 @@
                                             <div class="image-input image-input-outline image-input-placeholder image-input-empty image-input-empty "
                                                 data-kt-image-input="true">
                                                 <!--begin::Preview existing avatar-->
-                                                <div class="image-input-wrapper adjust_size" style="background-image: url('');">
+                                                <div class="image-input-wrapper adjust_size"
+                                                    style="background-image: url('');">
                                                 </div>
                                                 <!--end::Preview existing avatar-->
                                                 <!--begin::Edit-->
@@ -270,11 +275,11 @@
                                         <div class="row mb-5">
                                             <div class="col-md-6 fv-row"><label
                                                     class="required fs-6 fw-semibold mb-2">Space Type</label>
-                                                    <select id="spacetypes" class="form-select form-select-solid" data-control="select2"
-                                                    data-hide-search="true" data-placeholder="Select a space type"
-                                                    name="space_assign">
+                                                <select id="spacetypes" class="form-select form-select-solid"
+                                                    data-control="select2" data-hide-search="true"
+                                                    data-placeholder="Select a space type" name="space_assign">
                                                     <!-- Add options -->
-                                                
+
                                                     <!-- Add options -->
                                                 </select></div>
                                         </div>

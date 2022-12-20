@@ -1,4 +1,4 @@
-{% extends 'web_app/student_base.html' %}
+{% extends 'web_app/bases/student_base.html' %}
 
 {% load staticfiles %}
 
@@ -60,73 +60,8 @@
     <!--begin::Post-->
     <div class="content flex-row-fluid" id="kt_content">
         <!--begin::Row-->
-        <div class="row g-6 mb-6 g-xl-9 mb-xl-9">
+        <div class="row g-6 mb-6 g-xl-9 mb-xl-9" id="first_row">
             <!--begin::Followers-->
-            <!--begin::Col-->
-            <div class="col-md-6 col-xxl-4">
-                <!--begin::Card-->
-                <div class="card">
-                    <!--begin::Card body-->
-                    <div class="card-body d-flex flex-center flex-column py-9 px-5" onclick="goThrough()">
-                        <!--begin::Avatar-->
-                        <div class="mb-5">
-                            <img class="thumbnail" src="{% static "/web_app/media/picassoExhibition/pic14.webp"%}"
-                                alt="image" />
-                        </div>
-                        <!--end::Avatar-->
-                        <!--begin::Name-->
-                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0 text-hover-primary">La Lecture</a>
-                        <!--end::Name-->
-                    </div>
-                    <!--begin::Card body-->
-                </div>
-                <!--begin::Card-->
-            </div>
-            <!--end::Col-->
-            <!--begin::Col-->
-            <div class="col-md-6 col-xxl-4">
-                <!--begin::Card-->
-                <div class="card">
-                    <!--begin::Card body-->
-                    <div class="card-body d-flex flex-center flex-column py-9 px-5" onclick="goThrough()">
-                        <!--begin::Avatar-->
-                        <div class="mb-5">
-                            <img class="thumbnail" src="{% static "/web_app/media/picassoExhibition/pic15.webp"%}"
-                                alt="image" />
-                        </div>
-                        <!--end::Avatar-->
-                        <!--begin::Name-->
-                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0 text-hover-primary">Nude in a black
-                            armchair</a>
-                        <!--end::Name-->
-                    </div>
-                    <!--begin::Card body-->
-                </div>
-                <!--begin::Card-->
-            </div>
-            <!--end::Col-->
-            <!--begin::Col-->
-            <div class="col-md-6 col-xxl-4">
-                <!--begin::Card-->
-                <div class="card">
-                    <!--begin::Card body-->
-                    <div class="card-body d-flex flex-center flex-column py-9 px-5" onclick="goThrough()">
-                        <!--begin::Avatar-->
-                        <div class="mb-5">
-                            <img class="thumbnail" src="{% static "/web_app/media/picassoExhibition/pic9.webp"%}"
-                                alt="image" />
-                        </div>
-                        <!--end::Avatar-->
-                        <!--begin::Name-->
-                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0 text-hover-primary">Garson à la pipe</a>
-                        <!--end::Name-->
-                    </div>
-                    <!--begin::Card body-->
-                </div>
-                <!--begin::Card-->
-            </div>
-            <!--end::Col-->
-
 
             <!--end::Followers-->
         </div>
@@ -134,69 +69,7 @@
         <!--begin::Row(for show more)-->
         <div class="row g-6 mb-6 g-xl-9 mb-xl-9 d-none" id="kt_followers_show_more_cards">
             <!--begin::Followers-->
-            <!--begin::Col-->
-            <div class="col-md-6 col-xxl-4">
-                <!--begin::Card-->
-                <div class="card">
-                    <!--begin::Card body-->
-                    <div class="card-body d-flex flex-center flex-column py-9 px-5" onclick="goThrough()">
-                        <!--begin::Avatar-->
-                        <div class="mb-5">
-                            <img class="thumbnail" src="{% static "/web_app/media/picassoExhibition/pic6.jpg"%}"
-                                alt="image" />
-                        </div>
-                        <!--end::Avatar-->
-                        <!--begin::Name-->
-                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0 text-hover-primary">Gray Nights</a>
-                        <!--end::Name-->
-                    </div>
-                    <!--begin::Card body-->
-                </div>
-                <!--begin::Card-->
-            </div>
-            <!--end::Col-->
-            <!--begin::Col-->
-            <div class="col-md-6 col-xxl-4">
-                <!--begin::Card-->
-                <div class="card">
-                    <!--begin::Card body-->
-                    <div class="card-body d-flex flex-center flex-column py-9 px-5" onclick="goThrough()">
-                        <!--begin::Avatar-->
-                        <div class="mb-5">
-                            <img class="thumbnail" src="{% static "/web_app/media/picassoExhibition/pic10.webp"%}"
-                                alt="image" />
-                        </div>
-                        <!--end::Avatar-->
-                        <!--begin::Name-->
-                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0 text-hover-primary">Gray Nights</a>
-                        <!--end::Name-->
-                    </div>
-                    <!--begin::Card body-->
-                </div>
-                <!--begin::Card-->
-            </div>
-            <!--end::Col-->
-            <!--begin::Col-->
-            <div class="col-md-6 col-xxl-4">
-                <!--begin::Card-->
-                <div class="card">
-                    <!--begin::Card body-->
-                    <div class="card-body d-flex flex-center flex-column py-9 px-5" onclick="goThrough()">
-                        <!--begin::Avatar-->
-                        <div class="mb-5">
-                            <img class="long_thumbnail" src="{% static "/web_app/media/picassoExhibition/pic7.jfif"%}"
-                                alt="image" />
-                        </div>
-                        <!--end::Avatar-->
-                        <!--begin::Name-->
-                        <a href="#" class="fs-4 text-gray-800 fw-bold mb-0 text-hover-primary">Gray Nights</a>
-                        <!--end::Name-->
-                    </div>
-                    <!--begin::Card body-->
-                </div>
-                <!--begin::Card-->
-            </div>
-            <!--end::Col-->
+
             <!--end::Followers-->
         </div>
         <!--end::Row-->

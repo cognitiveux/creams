@@ -1,13 +1,36 @@
-{% extends 'web_app/teacher_base.html' %}
+{% extends 'web_app/bases/teacher_base.html' %}
 
 {% load staticfiles %}
 
 {% block scripts %}
+<script>
+    const exh_id = '{{exh_id}}';
+    const student_id = '{{student_id}}'
+    function goBack() {
+        document.location.href = "/web_app/teacher/student_assessment/?q=" + exh_id;
+    }
+</script>
 {{ block.super }}
-<script defer src="{% static "/web_app/js/customJS/teacher_dashboard.js" %}"></script>
 {% endblock %}
 
 {% block toolbar %}
+<a href="/web_app/teacher/exhibition/" class="menu-item  me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Initiate an
+        Exhibition
+    </span>
+    <!--end:Menu link-->
+</a>
+
+<a href="/web_app/teacher/assessment/" class="menu-item here me-0 me-lg-2">
+    <!--begin:Menu link-->
+    <span class="menu-link py-3">
+        Assessment
+    </span>
+    <!--end:Menu link-->
+
+</a>
 
 {% endblock %}
 
@@ -27,7 +50,7 @@
                 <!--begin::help--><a href="#"
                     class="btn btn-success btn-success-custom fw-semibold px-8 py-3 teal ">Help</a>
                 <!--end::help-->
-                <!--begin::cancel--><a href="/web_app/teacher/student_assessment/"
+                <!--begin::cancel--><a onclick="goBack()"
                     class="btn btn-success btn-success-custom fw-semibold px-8 py-3 gray ">Back to student list</a>
                 <!--end::cancel-->
                 </button>
@@ -50,8 +73,7 @@
                         class="form-control form-control-solid" rows="10" name="message" placeholder=""
                         style=" resize: none;"></textarea>
                 </div>
-                <a href="/web_app/teacher/student_assessment/"
-                    class="btn btn-success btn-success-custom fw-semibold pink ">Submit Feedback</a>
+                <a href="#" class="btn btn-success btn-success-custom fw-semibold pink ">Submit Feedback</a>
                 <!--end::Input group-->
             </div>
             <div class="col-6">
@@ -71,7 +93,7 @@
                         <!--begin::Item-->
                         <div class="col text-center mb-9">
                             <!--begin::Photo-->
-                            <a href="https://www.google.com/">
+                            <a href="#">
                                 <img alt="exh1"
                                     class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                     src="{% static "/web_app/media/exh/exh4.jfif" %}"></a>
@@ -80,8 +102,7 @@
                             <div class="mb-0">
                                 <!--begin::Position-->
                                 <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                <a href="/web_app/teacher/student_assessment/"
-                                class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                 <!--begin::Position-->
                             </div>
                             <!--end::Person-->
@@ -90,7 +111,7 @@
                         <!--begin::Item-->
                         <div class="col text-center mb-9">
                             <!--begin::Photo-->
-                            <a href="https://www.google.com/">
+                            <a href="#">
                                 <img alt="exh1" id="testpic"
                                     class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                     src="{% static "/web_app/media/exh/exh3.jfif" %}"></a>
@@ -99,8 +120,7 @@
                             <div class="mb-0">
                                 <!--begin::Position-->
                                 <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                <a href="/web_app/teacher/student_assessment/"
-                                class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                 <!--begin::Position-->
                             </div>
                             <!--end::Person-->
@@ -109,7 +129,7 @@
                         <!--begin::Item-->
                         <div class="col text-center mb-9">
                             <!--begin::Photo-->
-                            <a href="https://www.google.com/">
+                            <a href="#">
                                 <img alt="exh1"
                                     class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                     src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
@@ -118,8 +138,7 @@
                             <div class="mb-0">
                                 <!--begin::Position-->
                                 <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                <a href="/web_app/teacher/student_assessment/"
-                                class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                 <!--begin::Position-->
                             </div>
                             <!--end::Person-->
@@ -172,8 +191,7 @@
                         class="form-control form-control-solid" rows="10" name="message" placeholder=""
                         style=" resize: none;"></textarea>
                 </div>
-                <a href="/web_app/teacher/student_assessment/"
-                    class="btn btn-success btn-success-custom fw-semibold pink ">Submit Feedback</a>
+                <a href="#" class="btn btn-success btn-success-custom fw-semibold pink ">Submit Feedback</a>
                 <!--end::Input group-->
             </div>
             <div class="col-6">
@@ -192,7 +210,7 @@
                         <!--begin::Item-->
                         <div class="col text-center mb-9">
                             <!--begin::Photo-->
-                            <a href="https://www.google.com/">
+                            <a href="#">
                                 <img alt="exh1"
                                     class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                     src="{% static "/web_app/media/exh/exh4.jfif" %}"></a>
@@ -201,8 +219,7 @@
                             <div class="mb-0">
                                 <!--begin::Position-->
                                 <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                <a href="/web_app/teacher/student_assessment/"
-                                class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                 <!--begin::Position-->
                             </div>
                             <!--end::Person-->
@@ -211,7 +228,7 @@
                         <!--begin::Item-->
                         <div class="col text-center mb-9">
                             <!--begin::Photo-->
-                            <a href="https://www.google.com/">
+                            <a href="#">
                                 <img alt="exh1" id="testpic"
                                     class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                     src="{% static "/web_app/media/exh/exh3.jfif" %}"></a>
@@ -220,8 +237,7 @@
                             <div class="mb-0">
                                 <!--begin::Position-->
                                 <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                <a href="/web_app/teacher/student_assessment/"
-                                class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                 <!--begin::Position-->
                             </div>
                             <!--end::Person-->
@@ -230,7 +246,7 @@
                         <!--begin::Item-->
                         <div class="col text-center mb-9">
                             <!--begin::Photo-->
-                            <a href="https://www.google.com/">
+                            <a href="#">
                                 <img alt="exh1"
                                     class="carou-pics mx-auto mb-2 d-flex bgi-no-repeat bgi-size-contain bgi-position-center"
                                     src="{% static "/web_app/media/exh/exh2.jfif" %}"></a>
@@ -239,8 +255,7 @@
                             <div class="mb-0">
                                 <!--begin::Position-->
                                 <div class="text-muted fs-6 fw-semibold">Remembering the past</div>
-                                <a href="/web_app/teacher/student_assessment/"
-                                class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
+                                <a href="#" class="btn btn-success btn-success-custom fw-semibold  ">Assess</a>
                                 <!--begin::Position-->
                             </div>
                             <!--end::Person-->
