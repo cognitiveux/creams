@@ -8,13 +8,15 @@
     <string name="dis_closest_gallery">Display the closest gallery</string>
     <string name="or_textview">or</string>
     <string name="dis_closest_artwork">Display the closest artwork</string>
-    <string name="allString"><![CDATA[All>]]></string>
+    <string name="allString"> All> </string>
     <string name="galleries_near_you">Galleries near you</string>
     <string name="galleriesFav">Galleries</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="girl_with_pearl_earring">Girl with Pearl Earring</string>
-    <string name="starry_night">Starry Night</string>
-    <string name="gallery_title">Starry Night</string>
-    <string name="american_office_gothic">American Office Gothic</string>
-    <string name="nighthawks">Nighthawks</string>
+
+    <string name="girl_with_pearl_earring">Red Red Red</string>
+    <string name="starry_night">The Hug</string>
+    <string name="gallery_title">The Hug</string>
+    <string name="american_office_gothic">The Speed of Softness</string>
+    <string name="nighthawks">Out of Water</string>
+    <string name="thumbnail_image_description_foracc">Image of Gallery</string>
 </resources>

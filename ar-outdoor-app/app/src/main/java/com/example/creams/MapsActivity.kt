@@ -1,10 +1,11 @@
 package com.example.creams
 
-
 import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.creams.databinding.ActivityMapsBinding
@@ -15,24 +16,24 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import okhttp3.*
 
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-
-
+@Suppress("DEPRECATION")
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+    GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
-
     private lateinit var lastLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    // New addition for image display through Popup adapter
+    private val images: HashMap<String, Uri> = HashMap<String, Uri>()
 
     companion object {
         private const val LOCATION_REQUEST_CODE = 1
     }
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,45 +47,35 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mapFragment.getMapAsync(this)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    // Manipulates the map once available.
+    // This callback is triggered when the map is ready to be used and is where we can add markers or lines, add listeners or move the camera.
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
         mMap.setOnMarkerClickListener(this)
 
-        // TODO: On Marker, add image of painting
-        val girlposition = LatLng(37.423254, -122.080142)
-        googleMap.addMarker(
-            MarkerOptions()
-                .position(girlposition)
-                .title("Gallery: Girl with Pearl Earring")
-                .snippet("Oil painting by Dutch Golden Age painter Johannes Vermeer")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-        )
-
-        // TODO: Remove Polyline
-        mMap.addPolyline( PolylineOptions()
-            .clickable(true)
-            .add(
-                LatLng(37.422073563344895, -122.08409361598481),
-                LatLng(37.422073563344895, -122.08409361598481),
-                LatLng(37.422073563344895, -122.08409361598481),
-                LatLng(37.422073563344895, -122.08409361598481),
-                LatLng(37.423038, -122.083373),
-                LatLng(37.423254, -122.080142)))
+        // Fetching the data
+        //val title = intent.getStringExtra("title" )
+        val ownername = intent.getStringExtra("ownername" )
+        //val gal_id = intent.getIntExtra("gal_id", -1 )
+        val gal_size = intent.getIntExtra("gal_size", -1)
+        val artworklistname = intent.getStringArrayListExtra("artworklistname")
+        val artworklistlat = intent.getSerializableExtra("artworklistlat") as ArrayList<*>
+        val artworklistlon = intent.getSerializableExtra("artworklistlon") as ArrayList<*>
+        val artworklistsrc = intent.getStringArrayListExtra("artworklistsrc")
 
 
+        for (i in 0 until gal_size) {
+            addMarker(mMap, artworklistlat[i] as Double, artworklistlon[i] as Double,  artworklistname?.get(i),
+                "by $ownername", artworklistsrc?.get(i))
+        }
 
+        mMap.setInfoWindowAdapter(PopupAdapter(this, layoutInflater, images))
+        mMap.setOnInfoWindowClickListener(this)
         setUpMap()
     }
 
@@ -102,8 +93,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             if (location != null) {
                 lastLocation = location
                 val currentLatLong = LatLng (location.latitude, location.longitude)
-                placeMarkerOnMap(currentLatLong)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 15f))
+                // If wanted, add special marker on maps for user's position
+                //placeMarkerOnMap(currentLatLong)
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 18f))
             }
         }
     }
@@ -116,4 +108,29 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onMarkerClick(p0: Marker) = false
+
+
+    private fun addMarker(map: GoogleMap, lat: Double, lon: Double, title: String?, snippet: String?, image: String?) {
+        val marker = map.addMarker(
+            MarkerOptions().position(LatLng(lat, lon))
+                .title(title)
+                .snippet(snippet)
+        )
+        if (image != null) {
+            images[marker!!.id] = Uri.parse("http://creams-api.cognitiveux.net/media/$image")
+        }
+    }
+
+    override fun onInfoWindowClick(marker: Marker) {
+        Toast.makeText(this, marker.title, Toast.LENGTH_LONG).show()
+    }
+
+
+
+
+
+
+
+
+
 }

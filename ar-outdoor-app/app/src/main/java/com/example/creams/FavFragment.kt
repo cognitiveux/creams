@@ -2,117 +2,89 @@ package com.example.creams
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import kotlinx.android.synthetic.main.fragment_fav.*
 import okhttp3.*
-import java.io.IOException
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-// TODO: This is a testing click, still needing APIs!
-private const val imgurl = "http://creams-api.cognitiveux.net/web_app/artworks/details?artwork-id=2"
+import okio.IOException
+import org.json.JSONObject
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FavFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class FavFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    val gson: Gson = GsonBuilder().create()
+    var outdoorGalleries: OutdoorGalleryModel = gson.fromJson("{\"exhibitions\":[]}",OutdoorGalleryModel::class.java)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fav, container, false)
+        val view = inflater.inflate(R.layout.fragment_fav, container, false)
+
+        // TODO: Change Favourite's Recycler View
+        val recyclerView_Galleries = view?.findViewById(R.id.recyclerView_Galleries) as RecyclerView
+
+        recyclerView_Galleries.layoutManager = GridLayoutManager(context, 1)
+        recyclerView_Galleries.adapter = MainAdapter(outdoorGalleries)
+
+        fetchJson()
+
+        return view
     }
 
-
     @SuppressLint("SetTextI18n")
+
+    //ALWAYS FINDVIEWBYID IN ONVIEWCREATED
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val urlButton = view.findViewById(R.id.urlButton) as Button
-        val urlDump = view.findViewById(R.id.urlDump) as TextView
+        // TODO: Add all the listeners from the Recycler View
+//        val image_view_gal = view.findViewById(R.id.firstGallery) as ImageView
+//        image_view_gal.setOnClickListener {
+//            activity?.let{
+//                val intent = Intent(it, MapsActivity::class.java)
+//                it.startActivity(intent)
+//            }
+//        }
+    }
 
-        urlButton.setOnClickListener {
+    fun fetchJson() {
 
-            val URL: String = imgurl
-            if (URL.isNotEmpty()) {
-                // Creating HTTP Client
-                val galleryImageFetch = OkHttpClient()
-                // Building the request
-                val request = Request.Builder()
-                    .url(URL)
-                    .build()
-                // Enqueue the request and handle the call backs
-                galleryImageFetch.newCall(request).enqueue(object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        e.printStackTrace();
-                    }
+        // Val url that doesn't change
+        val url = "http://creams-api.cognitiveux.net/web_app/exhibitions/outdoor/all"
 
-                    override fun onResponse(call: Call, response: Response) {
-                        Log.i(
-                            "Response",
-                            "Received response from server"
-                        ); //information log for debugging
-                        response.use {
-                            if (!response.isSuccessful) {
-                                Log.e("HTTP Error", "Something didn't load or wasn't successful");
-                            } else {
-                                // Fetch the body of the response
-                                val body =
-                                    response.body?.string() // Fetch the body as a separate thread,  can cause issues!
-                                urlDump.text =
-                                    body // print the body to the textview on the screen
-                            }
-                        }
-                    }
+        // construct the request
+        val request = Request.Builder().url(url).build()
+        val client = OkHttpClient()
+
+        // Call the request (execute outside the main thread... enqueued first)
+        // Enqueue runs all the request on the background, need to call run on ui to bring in the front
+        client.newCall(request).enqueue(object: Callback {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body?.string()
+                val json = JSONObject(body)
+                val resource_obj = json.getJSONObject("resource_obj").toString()
+
+                outdoorGalleries = gson.fromJson(resource_obj,OutdoorGalleryModel::class.java)
+
+                activity?.runOnUiThread(Runnable {
+                    recyclerView_Galleries.adapter = MainAdapter(outdoorGalleries)
                 })
-            } else {
-                urlDump.text = "URL was empty"
             }
-        }
-
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to execute request")
+            }
+        })
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FavFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
 }
