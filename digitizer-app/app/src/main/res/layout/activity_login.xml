@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".LoginActivity"
+    android:background="#B8B8B8">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/creamslogo"
+        android:layout_marginHorizontal="30dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        android:textAlignment="center"
+        android:textColor="#000"
+        android:paddingVertical="50dp"
+        android:textSize="30sp"
+
+        />
+    <TextView
+        android:id="@+id/txtString"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/insert_your_username"
+        android:layout_marginHorizontal="30dp"
+        android:textColor="#000"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/insert_your_username"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginBottom="20dp"
+        android:inputType="textEmailAddress"
+        android:id="@+id/editText_user"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/insert_your_password"
+        android:layout_marginHorizontal="30dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:hint="@string/insert_your_password"
+        android:inputType="textPassword"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/editText_password"
+        />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Login2"
+        android:layout_marginHorizontal="30dp"
+
+        />
+
+    <TextView
+        android:id="@+id/hyperlink"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/hyperlink"
+        android:textAlignment="center" />
+
+</LinearLayout>

@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">CreamsDigitizer</string>
+    <string name="login">Login</string>
+    <string name="insert_your_username">Insert your name</string>
+    <string name="insert_your_password">"Insert your password "</string>
+    <string name="Login2">LOGIN</string>
+    <string name="hyperlink"><a href="http://creams-api.cognitiveux.net/web_app/sign-up/">Register from CREAMS Platform</a></string>
+    <string name="creams_digitizer_app">CREAMS Digitizer App</string>
+    <string name="open_camera">OPEN CAMERA</string>
+    <string name="upload">UPLOAD</string>
+    <string name="crop">CROP</string>
+    <string name="name_of_artwork">Name of Artwork:</string>
+    <string name="name">Name</string>
+    <string name="type_the_name">Type the name</string>
+    <string name="title_activity_crop">CropActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+
+</resources>
