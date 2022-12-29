@@ -17,10 +17,6 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        Properties properties = new Properties()
-
-        properties.load(project.rootProject.file('local.properties').newDataInputStream())
-        buildConfigField "String", "API_KEY", "\"${properties.getProperty("API_KEY")}\""
     }
 
     buildTypes {
@@ -49,7 +45,6 @@ android {
 
 dependencies {
 
-
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
@@ -68,16 +63,14 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.appcompat:appcompat:1.5.1'
 
-
     // Okhttp
+    //implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.10'
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
-    //Gson
+    // Gson
     implementation 'com.google.code.gson:gson:2.10'
 
-    /*def moshi_version = "1.14.0" */
     def retrofit_version = "2.9.0"
-
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
 
@@ -89,6 +82,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
 
+//    // and Glide
+//    implementation 'com.github.bumptech.glide:glide:4.14.2'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.14.2'
+
+//    // Coil
+//    def moshi_version = "1.14.0"
+//    implementation('io.coil-kt:coil:2.2.2')
 
 
 }

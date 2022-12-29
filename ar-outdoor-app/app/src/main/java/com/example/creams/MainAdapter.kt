@@ -15,8 +15,6 @@ import kotlinx.android.synthetic.main.galleries_row.view.*
 private val image_url = "http://creams-api.cognitiveux.net/media/"
 
 class MainAdapter(val outdoorGalleries: OutdoorGalleryModel): RecyclerView.Adapter<CustomViewHolder>() {
-    // Url for image parsing
-
 
     // Number of exhibitions
     override fun getItemCount(): Int {
@@ -45,36 +43,37 @@ class MainAdapter(val outdoorGalleries: OutdoorGalleryModel): RecyclerView.Adapt
 
         // Refresh with scroll the passing data!!!
         holder.outdoorGallery = exhibition
-
     }
-
 }
 
 class CustomViewHolder(val view: View, var outdoorGallery: OutdoorGalleries? = null): RecyclerView.ViewHolder(view) {
 
 
     init {
+
         view.setOnClickListener {
             val intent = Intent(view.context, MapsActivity::class.java)
             val bundle = Bundle()
 
             // Bundle up the exhibition and artwork info
-            bundle.putString("title", outdoorGallery?.title)
-            bundle.putString("ownername", outdoorGallery?.owner_name)
+            //bundle.putString("title", outdoorGallery?.title)
+            bundle.putString("ownername_from_recyclerview", outdoorGallery?.owner_name)
             //bundle.putInt("gal_id", outdoorGallery!!.id)
             bundle.putInt("gal_size", outdoorGallery!!.artworks.size)
 
+            val button_id = 0
             val artworklistname: ArrayList<String> = outdoorGallery!!.artworks.map { it.name } as ArrayList<String>
             val artworklistlat: ArrayList<Double> = outdoorGallery!!.artworks.map { it.lat } as ArrayList<Double>
             val artworklistlon: ArrayList<Double> = outdoorGallery!!.artworks.map { it.lon } as ArrayList<Double>
             val artworklistsrc: ArrayList<String> = outdoorGallery!!.artworks.map { it.src } as ArrayList<String>
 
+
+            bundle.putInt("button_id",  button_id)
+            bundle.putInt("gal_id", outdoorGallery!!.artworks.size)
             bundle.putStringArrayList("artworklistname",  artworklistname)
             bundle.putSerializable("artworklistlat", artworklistlat)
             bundle.putSerializable("artworklistlon", artworklistlon)
             bundle.putStringArrayList("artworklistsrc",  artworklistsrc)
-
-
 
             // Add bundle to intent and send to intended activity
             intent.putExtras(bundle)

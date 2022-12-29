@@ -45,7 +45,7 @@ class GalleriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: Add all the listeners from the Recycler View
+        // TODO: Add all the listeners from the Recycler View of Galleries Fragment
 //        val image_view_gal = view.findViewById(R.id.firstGallery) as ImageView
 //        image_view_gal.setOnClickListener {
 //            activity?.let{
@@ -84,7 +84,6 @@ class GalleriesFragment : Fragment() {
                 println("Failed to execute request")
             }
         })
-
     }
 
 

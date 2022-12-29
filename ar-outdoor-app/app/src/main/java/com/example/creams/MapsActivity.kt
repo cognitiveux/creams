@@ -19,8 +19,11 @@ import com.google.android.gms.maps.model.*
 import okhttp3.*
 
 
+
+
 @Suppress("DEPRECATION")
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+class
+MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
     GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var mMap: GoogleMap
@@ -28,11 +31,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var lastLocation: Location
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    // New addition for image display through Popup adapter
+    // HashMap for Images in Markers (Popup Adapter Magics
     private val images: HashMap<String, Uri> = HashMap<String, Uri>()
 
     companion object {
-        private const val LOCATION_REQUEST_CODE = 1
+        const val LOCATION_REQUEST_CODE = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,27 +62,65 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         mMap.setOnMarkerClickListener(this)
 
         // Fetching the data
-        //val title = intent.getStringExtra("title" )
-        val ownername = intent.getStringExtra("ownername" )
-        //val gal_id = intent.getIntExtra("gal_id", -1 )
-        val gal_size = intent.getIntExtra("gal_size", -1)
+
+        val button_id = intent.getIntExtra("button_id",-1)
+
+        // Only when recyclerview is clicked:
+        val gal_id = intent.getIntExtra("gal_id", -1 )
+
+        val artworks_size = intent.getIntExtra("artworks_size", -1)
         val artworklistname = intent.getStringArrayListExtra("artworklistname")
         val artworklistlat = intent.getSerializableExtra("artworklistlat") as ArrayList<*>
         val artworklistlon = intent.getSerializableExtra("artworklistlon") as ArrayList<*>
         val artworklistsrc = intent.getStringArrayListExtra("artworklistsrc")
+        val artworklistowneridart = intent.getStringArrayListExtra("artworklistowneridart")
+        val ownername_from_recyclerview = intent.getStringExtra("ownername_from_recyclerview")
 
 
-        for (i in 0 until gal_size) {
-            addMarker(mMap, artworklistlat[i] as Double, artworklistlon[i] as Double,  artworklistname?.get(i),
-                "by $ownername", artworklistsrc?.get(i))
+
+
+
+        when (button_id) {
+            1 -> {
+                // Create the Markers based on PopupAdapter when closest gallery is clicked
+                for (i in 0 until artworks_size) {
+                    addMarker(mMap, artworklistlat[i] as Double, artworklistlon[i] as Double,
+                        artworklistname?.get(i),
+                        "by ${artworklistowneridart?.get(i)}", artworklistsrc?.get(i))
+                }
+                mMap.setInfoWindowAdapter(PopupAdapter(this, layoutInflater, images))
+                mMap.setOnInfoWindowClickListener(this)
+                setUpMap(button_id, artworklistlat, artworklistlon)
+            }
+            2 -> {
+
+                // Create the Markers based on PopupAdapter when closest artwork is clicked
+                for (i in 0 until artworks_size) {
+                    addMarker(mMap, artworklistlat[i] as Double, artworklistlon[i] as Double,
+                        artworklistname?.get(i),
+                        "by ${artworklistowneridart?.get(i)}", artworklistsrc?.get(i))
+                }
+
+                mMap.setInfoWindowAdapter(PopupAdapter(this, layoutInflater, images))
+                mMap.setOnInfoWindowClickListener(this)
+                setUpMap(button_id, artworklistlat, artworklistlon)
+            }
+            else -> {
+                // Create the Markers based on PopupAdapter when a gallery is clicked
+                for (i in 0 until gal_id) {
+                    addMarker(mMap, artworklistlat[i] as Double, artworklistlon[i] as Double,  artworklistname?.get(i),
+                        "by $ownername_from_recyclerview", artworklistsrc?.get(i))
+                }
+                mMap.setInfoWindowAdapter(PopupAdapter(this, layoutInflater, images))
+                mMap.setOnInfoWindowClickListener(this)
+                setUpMap(button_id, artworklistlat, artworklistlon)
+            }
         }
 
-        mMap.setInfoWindowAdapter(PopupAdapter(this, layoutInflater, images))
-        mMap.setOnInfoWindowClickListener(this)
-        setUpMap()
     }
 
-    private fun setUpMap() {
+
+    private fun setUpMap(button_id: Int, latitudes: ArrayList<*>, longitudes: ArrayList<*>) {
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED ) {
@@ -91,14 +132,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fusedLocationClient.lastLocation.addOnSuccessListener(this) { location ->
 
             if (location != null) {
-                lastLocation = location
-                val currentLatLong = LatLng (location.latitude, location.longitude)
-                // If wanted, add special marker on maps for user's position
-                //placeMarkerOnMap(currentLatLong)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 18f))
+                if (button_id == 0) {
+                    lastLocation = location
+                    val currentLatLong = LatLng (location.latitude, location.longitude)
+                    //placeMarkerOnMap(currentLatLong)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 18f))
+                 }
+                else if (button_id == 1 ) {
+
+                    lastLocation = location
+                    val currentLatLong = LatLng (location.latitude, location.longitude)
+                    //placeMarkerOnMap(currentLatLong)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 18f))
+
+                }
+                else if (button_id == 2 ) {
+
+                    lastLocation = location
+                    val currentLatLong = LatLng (location.latitude, location.longitude)
+                    //placeMarkerOnMap(currentLatLong)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLong, 18f))
+
+                }
             }
         }
     }
+
+
 
     private fun placeMarkerOnMap(currentLatLong: LatLng) {
         val markerOptions = MarkerOptions().position(currentLatLong)
@@ -107,7 +167,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     }
 
+
+
     override fun onMarkerClick(p0: Marker) = false
+
 
 
     private fun addMarker(map: GoogleMap, lat: Double, lon: Double, title: String?, snippet: String?, image: String?) {
@@ -117,10 +180,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 .snippet(snippet)
         )
         if (image != null) {
-            images[marker!!.id] = Uri.parse("http://creams-api.cognitiveux.net/media/$image")
+            images[marker!!.id] = Uri.parse("http://creams-api.cognitiveux.net/media/" + image)
         }
     }
 
+    // Small toast showing the title of the artwork on info window click
     override fun onInfoWindowClick(marker: Marker) {
         Toast.makeText(this, marker.title, Toast.LENGTH_LONG).show()
     }

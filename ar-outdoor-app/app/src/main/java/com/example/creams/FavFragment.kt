@@ -25,7 +25,7 @@ class FavFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_fav, container, false)
 
@@ -43,11 +43,10 @@ class FavFragment : Fragment() {
     @SuppressLint("SetTextI18n")
 
     //ALWAYS FINDVIEWBYID IN ONVIEWCREATED
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO: Add all the listeners from the Recycler View
+        // TODO: Add all the listeners from the Recycler View of Favourite Fragment
 //        val image_view_gal = view.findViewById(R.id.firstGallery) as ImageView
 //        image_view_gal.setOnClickListener {
 //            activity?.let{
@@ -62,7 +61,7 @@ class FavFragment : Fragment() {
         // Val url that doesn't change
         val url = "http://creams-api.cognitiveux.net/web_app/exhibitions/outdoor/all"
 
-        // construct the request
+        // Construct the request
         val request = Request.Builder().url(url).build()
         val client = OkHttpClient()
 

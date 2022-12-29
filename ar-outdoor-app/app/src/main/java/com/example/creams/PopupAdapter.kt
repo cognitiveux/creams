@@ -24,6 +24,9 @@ internal class PopupAdapter(ctxt: Context, inflater: LayoutInflater?, images: Ha
     private var iconHeight = -1
     private var lastMarker: Marker? = null
 
+
+
+
     init {
         this.ctxt = ctxt
         this.inflater = inflater
@@ -35,6 +38,9 @@ internal class PopupAdapter(ctxt: Context, inflater: LayoutInflater?, images: Ha
     override fun getInfoWindow(marker: Marker): View? {
         return null
     }
+
+
+
 
     @SuppressLint("InflateParams")
     override fun getInfoContents(marker: Marker): View? {
@@ -65,6 +71,8 @@ internal class PopupAdapter(ctxt: Context, inflater: LayoutInflater?, images: Ha
         }
         return popup
     }
+
+
 
     internal class MarkerCallback(marker: Marker?) : Callback {
         var marker: Marker? = null
