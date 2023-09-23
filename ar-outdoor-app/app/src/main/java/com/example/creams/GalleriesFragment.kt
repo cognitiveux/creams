@@ -1,90 +1,119 @@
 package com.example.creams
 
-import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.fragment_fav.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import okio.IOException
 import org.json.JSONObject
 
-
 class GalleriesFragment : Fragment() {
 
-    val gson: Gson = GsonBuilder().create()
-    var outdoorGalleries: OutdoorGalleryModel = gson.fromJson("{\"exhibitions\":[]}",OutdoorGalleryModel::class.java)
+    private lateinit var recyclerViewArtworks: RecyclerView
+    private lateinit var mainAdapter: MainAdapter
+    private val gson: Gson = GsonBuilder().create()
+
+    private val imageUriBase = "https://creams-api.cognitiveux.net/media/"
+    private var outdoorGalleries: OutdoorGalleryModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-
-        // Inflate the layout for this fragment
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_galleries, container, false)
-
-        val recyclerView_Galleries = view?.findViewById(R.id.recyclerView_Galleries) as RecyclerView
-        // If we want only 1 gallery per row, remove card view + linear from galleries_row and return to constraint layout
-        // For 2 columns per row:
-        recyclerView_Galleries.layoutManager = GridLayoutManager(context, 2)
-        recyclerView_Galleries.adapter = MainAdapter(outdoorGalleries)
-
+        recyclerViewArtworks = view.findViewById(R.id.recyclerView_Galleries)
+        recyclerViewArtworks.layoutManager = GridLayoutManager(context, 2) // Set the number of columns here
+        mainAdapter = MainAdapter(OutdoorGalleryModel(emptyList()))
+        recyclerViewArtworks.adapter = mainAdapter
         fetchJson()
+
+        // Set a click listener for the items in the adapter
+        recyclerViewArtworks.addOnItemClickListener(object : OnItemClickListener {
+            // In the GalleriesFragment where you handle item click:
+            // In the GalleriesFragment where you handle item click:
+            override fun onItemClicked(position: Int) {
+                val exhibition = outdoorGalleries?.exhibitions?.get(position)
+                if (exhibition != null) {
+                    val imageUriString = imageUriBase + exhibition.thumbnail
+                    if (imageUriString.isNotEmpty()) {
+                        val imageUri = Uri.parse(imageUriString) // Convert the String to Uri
+                        openArActivity(imageUri)
+                    } else {
+                        Toast.makeText(context, "Image URL is empty.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(context, "Exhibition not found.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        })
 
         return view
     }
 
-    @SuppressLint("CutPasteId")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    private fun RecyclerView.addOnItemClickListener(onItemClickListener: OnItemClickListener) {
+        this.addOnChildAttachStateChangeListener(object : RecyclerView.OnChildAttachStateChangeListener {
+            override fun onChildViewAttachedToWindow(view: View) {
+                view.setOnClickListener {
+                    val position = getChildAdapterPosition(view)
+                    if (position != RecyclerView.NO_POSITION) {
+                        onItemClickListener.onItemClicked(position)
+                    }
+                }
+            }
 
-        // TODO: Add all the listeners from the Recycler View of Galleries Fragment
-//        val image_view_gal = view.findViewById(R.id.firstGallery) as ImageView
-//        image_view_gal.setOnClickListener {
-//            activity?.let{
-//                val intent = Intent(it, MapsActivity::class.java)
-//                it.startActivity(intent)
-//            }
-//        }
+            override fun onChildViewDetachedFromWindow(view: View) {
+                view.setOnClickListener(null)
+            }
+        })
     }
 
-
-    fun fetchJson() {
-
-        // Val url that doesn't change
-        val url = "http://creams-api.cognitiveux.net/web_app/exhibitions/outdoor/all"
-
-        // Construct the request
+    private fun fetchJson() {
+        val url = "https://creams-api.cognitiveux.net/web_app/exhibitions/outdoor/all"
         val request = Request.Builder().url(url).build()
         val client = OkHttpClient()
 
-        // Call the request (execute outside the main thread... enqueued first)
-        // Enqueue runs all the request on the background, need to call run on ui to bring in the front
-        client.newCall(request).enqueue(object: Callback {
-            @SuppressLint("NotifyDataSetChanged")
+        client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body?.string()
                 val json = JSONObject(body)
-                val resource_obj = json.getJSONObject("resource_obj").toString()
+                val resourceObj = json.getJSONObject("resource_obj").toString()
 
-                outdoorGalleries = gson.fromJson(resource_obj,OutdoorGalleryModel::class.java)
+                outdoorGalleries = gson.fromJson(resourceObj, OutdoorGalleryModel::class.java)
 
-                activity?.runOnUiThread(Runnable {
-                    recyclerView_Galleries.adapter = MainAdapter(outdoorGalleries)
-                })
+                activity?.runOnUiThread {
+                    mainAdapter.outdoorGalleries = outdoorGalleries ?: OutdoorGalleryModel(emptyList())
+                    mainAdapter.notifyDataSetChanged()
+                }
             }
+
             override fun onFailure(call: Call, e: IOException) {
                 println("Failed to execute request")
             }
         })
     }
 
+    private fun openArActivity(imageUri: Uri) {
+        val intent = Intent(activity, ArActivity::class.java)
+        intent.putExtra("imageUri", imageUri)
+        startActivity(intent)
+    }
 
+    // Click listener interface for RecyclerView item clicks
+    interface OnItemClickListener {
+        fun onItemClicked(position: Int)
+    }
 }

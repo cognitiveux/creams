@@ -8,9 +8,9 @@
     <item
         android:id="@+id/galleriesFragment"
         android:icon="@drawable/gallery"
-        android:title="Galleries" />
+        android:title="In Home" />
     <item
         android:id="@+id/favFragment"
         android:icon="@drawable/favorite"
-        android:title="Favourites" />
+        android:title="Indoor" />
 </menu>

@@ -4,19 +4,15 @@
     <string name="galleries_string">Galleries</string>
     <string name="favourites_string">Favourites</string>
     <string name="welcome_to_creams">Welcome to\nCREAMS</string>
-    <string name="galleries_outdoor">Galleries Outdoor</string>
+    <string name="galleries_outdoor">Project Artworks</string>
     <string name="dis_closest_gallery">Display the closest gallery</string>
     <string name="or_textview">or</string>
     <string name="dis_closest_artwork">Display the closest artwork</string>
     <string name="allString"> All> </string>
     <string name="galleries_near_you">Galleries near you</string>
-    <string name="galleriesFav">Galleries</string>
+    <string name="galleriesFav">In Home</string>
     <string name="title_activity_maps">MapsActivity</string>
 
-    <string name="girl_with_pearl_earring">Red Red Red</string>
-    <string name="starry_night">The Hug</string>
-    <string name="gallery_title">The Hug</string>
-    <string name="american_office_gothic">The Speed of Softness</string>
-    <string name="nighthawks">Out of Water</string>
+
     <string name="thumbnail_image_description_foracc">Image of Gallery</string>
 </resources>

@@ -18,7 +18,6 @@ import okhttp3.*
 import okio.IOException
 import org.json.JSONObject
 
-
 class HomeFragment : Fragment() {
 
 
@@ -96,14 +95,14 @@ class HomeFragment : Fragment() {
                 bundle.putStringArrayList("artworklistsrc", artworklistsrc)
 
                 // Remove duplicates
-                artworklistownerid = artworklistownerid.distinct() as ArrayList<String>
-                ownername = ownername.distinct() as ArrayList<String>
+                val artworklistownerid_new = artworklistownerid.distinct()
+                val ownername_new = ownername.distinct()
 
                 // Create Array List with painters' names
                 for (i in 0 until artworklistowneridart.size) {
-                    for (j in 0 until artworklistownerid.size) {
-                        if (artworklistownerid[j] == artworklistowneridart[i]) {
-                            artworklistowneridart[i] = ownername [j]
+                    for (j in 0 until artworklistownerid_new.size) {
+                        if (artworklistownerid_new[j] == artworklistowneridart[i]) {
+                            artworklistowneridart[i] = ownername_new [j]
                         }
                     }
                 }
@@ -126,8 +125,8 @@ class HomeFragment : Fragment() {
             val artworklistlon = arrayListOf<Double>()
             val artworklistsrc = arrayListOf<String>()
             val artworklistname = arrayListOf<String>()
-            var ownername = arrayListOf<String>()
-            var artworklistownerid = arrayListOf<String>()
+            val ownername = arrayListOf<String>()
+            val artworklistownerid = arrayListOf<String>()
             val artworklistowneridart = arrayListOf<String>()
             val num_exhibitions = outdoorGalleries.exhibitions.size
 
@@ -150,6 +149,7 @@ class HomeFragment : Fragment() {
                     artworklistsrc += outdoorGalleries.exhibitions[i].artworks.map { it.src } as ArrayList<String>
                 }
 
+
                 bundle.putInt("button_id",  button_id)
 
                 // artworks_size = Number of ALL the artworks
@@ -161,14 +161,14 @@ class HomeFragment : Fragment() {
 
 
                 // Remove duplicates
-                artworklistownerid = artworklistownerid.distinct() as ArrayList<String>
-                ownername = ownername.distinct() as ArrayList<String>
+                val artworklistownerid_new = artworklistownerid.distinct()
+                val ownername_new = ownername.distinct()
 
                 // Create Array List with painters' names
                 for (i in 0 until artworklistowneridart.size) {
-                    for (j in 0 until artworklistownerid.size) {
-                        if (artworklistownerid[j] == artworklistowneridart[i]) {
-                            artworklistowneridart[i] = ownername [j]
+                    for (j in 0 until artworklistownerid_new.size) {
+                        if (artworklistownerid_new[j] == artworklistowneridart[i]) {
+                            artworklistowneridart[i] = ownername_new [j]
                         }
                     }
                 }
@@ -188,7 +188,7 @@ class HomeFragment : Fragment() {
     fun fetchJson() {
 
         // Val url that doesn't change
-        val url = "http://creams-api.cognitiveux.net/web_app/exhibitions/outdoor/all"
+        val url = "https://creams-api.cognitiveux.net/web_app/exhibitions/outdoor/all"
 
         // Construct the request
         val request = Request.Builder().url(url).build()

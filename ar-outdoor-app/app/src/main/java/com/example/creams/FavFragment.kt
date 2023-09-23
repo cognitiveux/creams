@@ -1,89 +1,62 @@
 package com.example.creams
 
-import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import kotlinx.android.synthetic.main.fragment_fav.*
-import okhttp3.*
-import okio.IOException
-import org.json.JSONObject
-
-
+import com.google.zxing.integration.android.IntentIntegrator
 
 class FavFragment : Fragment() {
-
-    val gson: Gson = GsonBuilder().create()
-    var outdoorGalleries: OutdoorGalleryModel = gson.fromJson("{\"exhibitions\":[]}",OutdoorGalleryModel::class.java)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_fav, container, false)
 
-        // TODO: Change Favourite's Recycler View
-        val recyclerView_Galleries = view?.findViewById(R.id.recyclerView_Galleries) as RecyclerView
-
-        recyclerView_Galleries.layoutManager = GridLayoutManager(context, 1)
-        recyclerView_Galleries.adapter = MainAdapter(outdoorGalleries)
-
-        fetchJson()
+        val scanQRButton = view.findViewById<Button>(R.id.scanQRButton)
+        scanQRButton.setOnClickListener {
+            startQrCodeScanner()
+        }
 
         return view
     }
 
-    @SuppressLint("SetTextI18n")
-
-    //ALWAYS FINDVIEWBYID IN ONVIEWCREATED
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // TODO: Add all the listeners from the Recycler View of Favourite Fragment
-//        val image_view_gal = view.findViewById(R.id.firstGallery) as ImageView
-//        image_view_gal.setOnClickListener {
-//            activity?.let{
-//                val intent = Intent(it, MapsActivity::class.java)
-//                it.startActivity(intent)
-//            }
-//        }
+    private fun startQrCodeScanner() {
+        // Initialize the QR code scanner
+        val integrator = IntentIntegrator.forSupportFragment(this)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        integrator.setPrompt("Scan a QR code")
+        integrator.setBeepEnabled(false)
+        integrator.setOrientationLocked(false) // Allow orientation change
+        integrator.initiateScan()
     }
 
-    fun fetchJson() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        // Handle QR code scan result
+        val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result != null) {
+            val scannedUrl = result.contents
+            if (scannedUrl != null && scannedUrl.isNotEmpty()) {
+                // Convert scannedUrl to Uri
+                val uri = Uri.parse(scannedUrl)
 
-        // Val url that doesn't change
-        val url = "http://creams-api.cognitiveux.net/web_app/exhibitions/outdoor/all"
-
-        // Construct the request
-        val request = Request.Builder().url(url).build()
-        val client = OkHttpClient()
-
-        // Call the request (execute outside the main thread... enqueued first)
-        // Enqueue runs all the request on the background, need to call run on ui to bring in the front
-        client.newCall(request).enqueue(object: Callback {
-            @SuppressLint("NotifyDataSetChanged")
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body?.string()
-                val json = JSONObject(body)
-                val resource_obj = json.getJSONObject("resource_obj").toString()
-
-                outdoorGalleries = gson.fromJson(resource_obj,OutdoorGalleryModel::class.java)
-
-                activity?.runOnUiThread(Runnable {
-                    recyclerView_Galleries.adapter = MainAdapter(outdoorGalleries)
-                })
+                // Open ArActivity and pass the Uri to it
+                val intent = Intent(activity, ArActivity::class.java)
+                intent.putExtra("imageUri", uri)
+                startActivity(intent)
+            } else {
+                // Show a toast message when the scannedUrl is empty or null
+                Toast.makeText(activity, "Scanned URL is empty or null", Toast.LENGTH_SHORT).show()
             }
-            override fun onFailure(call: Call, e: IOException) {
-                println("Failed to execute request")
-            }
-        })
+        }
     }
+
 
 }

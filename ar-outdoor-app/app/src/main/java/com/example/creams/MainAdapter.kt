@@ -11,10 +11,9 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.galleries_row.view.*
 
 
+private val image_url = "https://creams-api.cognitiveux.net/media/"
 
-private val image_url = "http://creams-api.cognitiveux.net/media/"
-
-class MainAdapter(val outdoorGalleries: OutdoorGalleryModel): RecyclerView.Adapter<CustomViewHolder>() {
+class MainAdapter(var outdoorGalleries: OutdoorGalleryModel): RecyclerView.Adapter<CustomViewHolder>() {
 
     // Number of exhibitions
     override fun getItemCount(): Int {
